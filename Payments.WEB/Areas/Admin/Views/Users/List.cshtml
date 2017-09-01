@@ -1,0 +1,36 @@
+﻿@model IEnumerable<Payments.BLL.DTO.UserInfoDTO>
+@{
+    ViewBag.Title = "List";
+}
+
+<h2>List of users</h2>
+
+<div class="container">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Firstname</th>
+                <th>Second name</th>
+                <th>Patronymic</th>
+                <th>Phone number</th>
+                <th>Email</th>
+                <th>VAT</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var profile in Model)
+            {
+                <tr>
+                    <td> @profile.FirstName </td>
+                    <td> @profile.SecondName </td>
+                    <td> @profile.Patronymic </td>
+                    <td> @profile.PhoneNumber </td>
+                    <td> @profile.Email </td>
+                    <td> @profile.VAT </td>
+                    <td> @Html.ActionLink("Show info", "Show", "Users", new { id = profile.Id}, new {@class="btn-link"}) </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
