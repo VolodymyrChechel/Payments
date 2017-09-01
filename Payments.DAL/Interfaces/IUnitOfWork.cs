@@ -9,7 +9,6 @@ namespace Payments.DAL.Interfaces
     public interface IUnitOfWork : IDisposable
     {
         // repositories for data store
-        IRepository<ClientProfile> ClientProfiles { get; }
         IRepository<Card> Cards { get; }
         IRepository<CreditAccount> CreditAccounts { get; }
         IRepository<DebitAccount> DebitAccounts { get; }

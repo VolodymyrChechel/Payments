@@ -15,7 +15,6 @@ namespace Payments.DAL.Repositories
         private PaymentsContext db;
         
         private CardRepository cardRepository;
-        private ClientProfileRepository clientProfileRepository;
         private CreditAccountRepository creditAccountRepository;
         private DebitAccountRepository debitAccountRepository;
         private TransactionRepository transactionRepository;
@@ -38,17 +37,6 @@ namespace Payments.DAL.Repositories
                     cardRepository = new CardRepository(db);
 
                 return cardRepository;
-            }
-        }
-
-        public IRepository<ClientProfile> ClientProfiles
-        {
-            get
-            {
-                if (clientProfileRepository == null)
-                    clientProfileRepository = new ClientProfileRepository(db);
-
-                return clientProfileRepository;
             }
         }
 

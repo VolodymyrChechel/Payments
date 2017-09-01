@@ -76,7 +76,6 @@
     <Compile Include="Repositories\DebitAccountRepository.cs" />
     <Compile Include="Repositories\CreditAccountRepository.cs" />
     <Compile Include="Repositories\CardRepository .cs" />
-    <Compile Include="Repositories\ClientProfileRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Payments.Common\Payments.Common.csproj">
