@@ -17,6 +17,8 @@ namespace Payments.DAL.Entities
 
         public Currency Currency { get; set; }
 
+        public string ClientProfileId { get; set; }
+
         public virtual ClientProfile ClientProfile { get; set; }
         public virtual ICollection<Card> Cards { get; set; } 
         public virtual ICollection<Transaction> Transactions { get; set; }

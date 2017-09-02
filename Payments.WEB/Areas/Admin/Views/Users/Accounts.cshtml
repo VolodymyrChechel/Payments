@@ -1,0 +1,15 @@
+﻿@model IEnumerable<Payments.WEB.Areas.Admin.Models.DebitAccountViewModel>
+@{
+    ViewBag.Title = "Accounts";
+}
+
+<h2>Accounts</h2>
+
+<ol>
+    @foreach (var account in @Model)
+    {
+        <li>
+            @account.AccountNumber | @account.Sum | @account.Currency | @account.IsBlocked | @account.ClientProfileId
+        </li>
+    }
+</ol>

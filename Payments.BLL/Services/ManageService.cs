@@ -34,6 +34,23 @@ namespace Payments.BLL.Services
             return Mapper.Map<ClientProfile, UserInfoDTO>(client);
         }
 
-        public 
+        public IEnumerable<DebitAccountDTO> GetDebitAccountsByProfile(string profileId)
+        {
+            var accountsList = Database.DebitAccounts.Find(debAcc => debAcc.ClientProfileId == profileId).ToList();
+
+            var accountsDtoList = Mapper.Map<IEnumerable<DebitAccount>, IEnumerable<DebitAccountDTO>>(accountsList);
+
+            return accountsDtoList;
+        }
+
+        public void CreateDebitAccount(DebitAccountDTO accountDto)
+        {
+            var account = Mapper.Map<DebitAccountDTO, DebitAccount>(accountDto);
+            var user = Database.ClientManager.Get(accountDto.ClientProfileId);
+            account.ClientProfile = user;
+            Database.DebitAccounts.Create(account);
+            user.Accounts.Add(account);
+            Database.Save();
+        }
     }
 }

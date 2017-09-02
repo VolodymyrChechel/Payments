@@ -14,6 +14,7 @@ namespace Payments.DAL.Interfaces
         IRepository<DebitAccount> DebitAccounts { get; }
         IRepository<Transaction> Transactions { get; }
         IRepository<UnblockAccountRequest> UnblockAccountRequests { get; }
+        void Save();
 
         // repositories for identity
         ApplicationUserManager UserManager { get; }

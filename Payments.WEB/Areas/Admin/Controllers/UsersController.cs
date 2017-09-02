@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using AutoMapper;
 using Microsoft.AspNet.Identity;
+using Payments.BLL.DTO;
 using Payments.BLL.Interfaces;
+using Payments.WEB.Areas.Admin.Models;
 
 namespace Payments.WEB.Areas.Admin.Controllers
 {
@@ -43,14 +46,34 @@ namespace Payments.WEB.Areas.Admin.Controllers
 
         public ActionResult Accounts(string id)
         {
-            var user = service.GetProfile(id);
+            var accounts = service.GetDebitAccountsByProfile(id);
+            var accountsViewList = Mapper.Map<IEnumerable<DebitAccountDTO>, IEnumerable<DebitAccountViewModel>>(accounts);
 
-            if (user == null)
+            return View(accountsViewList);
+        }
+
+        [HttpGet]
+        public ActionResult CreateDebitAccount(string id)
+        {
+            var debitAcc = new DebitAccountViewModel();
+            debitAcc.ClientProfileId = id;
+
+            return View(debitAcc);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult CreateDebitAccount(DebitAccountViewModel debitAcc)
+        {
+            if (ModelState.IsValid)
             {
-                return RedirectToAction("List");
+                var debitAccDto = Mapper.Map<DebitAccountViewModel, DebitAccountDTO>(debitAcc);
+                service.CreateDebitAccount(debitAccDto);
+
+                return RedirectToAction("Show", new { id = debitAcc.ClientProfileId});
             }
 
-            return View(user);
+            return View();
         }
     }
 }

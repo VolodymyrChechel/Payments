@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Payments.BLL.DTO;
+using Payments.WEB.Areas.Admin.Models;
 using Payments.WEB.Models;
 
 namespace Payments.WEB.Util
@@ -9,6 +10,9 @@ namespace Payments.WEB.Util
         public UserProfile()
         {
             CreateMap<RegisterModel, UserDTO>();
+            CreateMap<DebitAccountDTO, DebitAccountViewModel>();
+            CreateMap<DebitAccountViewModel, DebitAccountDTO>();
+
             //CreateMap<UserDTO, UserInfoDTO>();
         }
     }

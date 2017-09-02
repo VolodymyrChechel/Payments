@@ -9,9 +9,12 @@ namespace Payments.BLL.Interfaces
         IEnumerable<UserInfoDTO> GetProfiles();
         UserInfoDTO GetProfile(string id);
 
-        //void CreateNewAccount(AccountDTO accountDto)
-        //{
 
-        //}
+        // account managing
+        IEnumerable<DebitAccountDTO> GetDebitAccountsByProfile(string id);
+
+        void CreateDebitAccount(DebitAccountDTO debitAccount);
+
+        
     }
 }
