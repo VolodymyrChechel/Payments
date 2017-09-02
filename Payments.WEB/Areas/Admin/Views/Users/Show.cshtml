@@ -1,0 +1,14 @@
+﻿@using Payments.BLL.DTO
+@model UserInfoDTO
+
+@{
+    ViewBag.Title = "Show";
+}
+
+<h2>Information about user</h2>
+
+<p> @Model.FirstName @Model.SecondName | @Model.Email | @Model.VAT </p>
+
+<div>
+    @Html.Action("Accounts", new {id = @Model.Id})
+</div>

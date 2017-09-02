@@ -23,10 +23,17 @@ namespace Payments.BLL.Services
         public IEnumerable<UserInfoDTO> GetProfiles()
         {
             var clients = Database.ClientManager.GetAll().Include(profile => profile.ApplicationUser);
-            //clients.FirstOrDefault().ApplicationUser.Email
-            var testAfterMapper = Mapper.Map<IQueryable<ClientProfile>, IEnumerable<UserInfoDTO>>(clients);
 
-            return testAfterMapper;
+            return Mapper.Map<IQueryable<ClientProfile>, IEnumerable<UserInfoDTO>>(clients); ;
         }
+
+        public UserInfoDTO GetProfile(string id)
+        {
+            var client = Database.ClientManager.Get(id);
+
+            return Mapper.Map<ClientProfile, UserInfoDTO>(client);
+        }
+
+        public 
     }
 }

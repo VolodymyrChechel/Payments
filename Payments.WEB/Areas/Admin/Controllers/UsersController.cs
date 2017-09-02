@@ -29,9 +29,28 @@ namespace Payments.WEB.Areas.Admin.Controllers
             return View(list);
         }
 
-        //public ActionResult Show(string id)
-        //{
-        //    //var user = service.
-        //}
+        public ActionResult Show(string id)
+        {
+            var user = service.GetProfile(id);
+
+            if (user == null)
+            {
+                return RedirectToAction("List");
+            }
+            
+            return View(user);
+        }
+
+        public ActionResult Accounts(string id)
+        {
+            var user = service.GetProfile(id);
+
+            if (user == null)
+            {
+                return RedirectToAction("List");
+            }
+
+            return View(user);
+        }
     }
 }
