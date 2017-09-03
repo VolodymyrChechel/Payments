@@ -1,16 +1,17 @@
-﻿@using Payments.Common.Enums
-@model Payments.WEB.Areas.Admin.Models.DebitAccountViewModel
+﻿@model Payments.WEB.Areas.Admin.Models.DebitAccountViewModel
 
 @{
-    ViewBag.Title = "CreateDebitAccount";
+    ViewBag.Title = "Editing Account";
 }
 
-<h2>CreateDebitAccount</h2>
+<h2> Edit debit account - @Model.AccountNumber </h2>
 
-@using (Html.BeginForm("CreateDebitAccount", "Users", null, FormMethod.Post, new { @class = "form-horizontal" }))
+@using (Html.BeginForm("EditDebitAccount", "Users", null, FormMethod.Post, new { @class = "form-horizontal" }))
 {
     @Html.AntiForgeryToken()
     @Html.HiddenFor(model => model.ClientProfileId);
+
+    @Html.HiddenFor(model => model.AccountNumber)
 
     <div class="text-danger">
         @Html.ValidationSummary(false)
@@ -23,13 +24,13 @@
 
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
-            @Html.EditorFor(model => model.IsBlocked) @Html.LabelFor(model => model.IsBlocked, new {@class = "control-label"})
+            @Html.EditorFor(model => model.IsBlocked) @Html.LabelFor(model => model.IsBlocked, new { @class = "control-label" })
         </div>
     </div>
 
     <div class="form-group">
         @Html.LabelFor(model => model.Currency, new { @class = "col-md-2 control-label" })
-        <div class="col-md-6"> @Html.EnumDropDownListFor(model => model.Currency, new { @class = "form-control"  }) </div>
+        <div class="col-md-6"> @Html.EnumDropDownListFor(model => model.Currency, new { @class = "form-control" }) </div>
     </div>
 
     <div class="form-group">

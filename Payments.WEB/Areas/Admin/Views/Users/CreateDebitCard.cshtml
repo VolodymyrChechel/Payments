@@ -1,0 +1,33 @@
+﻿@using System.Collections
+@model Payments.WEB.Areas.Admin.Models.DepositCardViewModel
+
+@{
+    ViewBag.Title = "AddDebitCard";
+}
+
+<h2>AddDebitCard</h2>
+
+@using (Html.BeginForm("CreateDebitCard", "Users", null, FormMethod.Post, new { @class = "form-horizontal" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="text-danger">
+        @Html.ValidationSummary(false)
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.CreditCardTypes, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10"> @Html.EnumDropDownListFor(model => model.CreditCardTypes, new { @class = "form-control" }) </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.AccountAccountNumber, new { @class = "col-md-2 control-label" })
+        <div class="col-md-6"> @Html.DropDownListFor(model => model.AccountAccountNumber, new SelectList(ViewBag.DropDownListItems, "Value", "Text"), new { @class = "form-control" }) </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" class="btn btn-success">
+        </div>
+    </div>
+}

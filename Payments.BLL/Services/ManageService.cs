@@ -5,6 +5,7 @@ using System.Linq;
 using AutoMapper;
 using Microsoft.AspNet.Identity;
 using Payments.BLL.DTO;
+using Payments.BLL.Infrastructure;
 using Payments.BLL.Interfaces;
 using Payments.DAL.Entities;
 using Payments.DAL.Interfaces;
@@ -34,10 +35,13 @@ namespace Payments.BLL.Services
             return Mapper.Map<ClientProfile, UserInfoDTO>(client);
         }
 
-        public IEnumerable<DebitAccountDTO> GetDebitAccountsByProfile(string profileId)
+        public IEnumerable<DebitAccountDTO> GetDebitAccountsByProfile(string profileId, bool withoutCard)
         {
-            var accountsList = Database.DebitAccounts.Find(debAcc => debAcc.ClientProfileId == profileId).ToList();
+            var accountsList = Database.DebitAccounts.Find(debAcc => debAcc.ClientProfileId == profileId).Include(debAcc => debAcc.Cards).ToList();
 
+            if (withoutCard)
+                accountsList = accountsList.Where(debAcc => debAcc.Cards.Count == 0).ToList();
+            
             var accountsDtoList = Mapper.Map<IEnumerable<DebitAccount>, IEnumerable<DebitAccountDTO>>(accountsList);
 
             return accountsDtoList;
@@ -50,6 +54,50 @@ namespace Payments.BLL.Services
             account.ClientProfile = user;
             Database.DebitAccounts.Create(account);
             user.Accounts.Add(account);
+            Database.Save();
+        }
+
+        public DebitAccountDTO GetDebitAccount(int? id)
+        {
+            if(id == null)
+                throw new ValidationException("Accounts id was not passed", "");
+            
+            var account = Database.DebitAccounts.Get(id.Value);
+
+            if(account == null)
+                throw new ValidationException("Account was not found", "");
+
+            return Mapper.Map<DebitAccount, DebitAccountDTO>(account);
+        }
+
+        public void UpdateDebitAccount(DebitAccountDTO debitAccountDto)
+        {
+            if (debitAccountDto == null)
+                throw new ValidationException("Account was not passed", "");
+
+            var debitAccount = Mapper.Map<DebitAccountDTO, DebitAccount>(debitAccountDto);
+            Database.DebitAccounts.Update(debitAccount);
+
+            Database.Save();
+        }
+
+
+        public bool IsAccountExist(int? accountId)
+        {
+            if(accountId == null)
+                throw new ValidationException("Accounts id was not passed", "");
+
+            var account = Database.Accounts.Get(accountId.Value);
+            
+            return account != null;
+        }
+
+        public void DeleteAccount(int? accountId)
+        {
+            if (accountId == null)
+                throw new ValidationException("Accounts id was not passed", "");
+
+            Database.Accounts.Delete(accountId.Value);
             Database.Save();
         }
     }

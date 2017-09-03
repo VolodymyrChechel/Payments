@@ -10,6 +10,7 @@ namespace Payments.DAL.Interfaces
     {
         // repositories for data store
         IRepository<Card> Cards { get; }
+        IRepository<Account> Accounts { get; }
         IRepository<CreditAccount> CreditAccounts { get; }
         IRepository<DebitAccount> DebitAccounts { get; }
         IRepository<Transaction> Transactions { get; }

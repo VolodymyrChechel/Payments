@@ -10,7 +10,7 @@ namespace Payments.DAL.Entities
     public class Account
     {
         [Key]
-        public string AccountNumber { get; set; }
+        public int AccountNumber { get; set; }
 
         public decimal Sum { get; set; }
         public bool IsBlocked { get; set; }

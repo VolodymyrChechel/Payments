@@ -6,8 +6,11 @@ namespace Payments.WEB.Areas.Admin.Models
     public class DebitAccountViewModel
     {
         public string AccountNumber { get; set; }
-        [Range(typeof(decimal), "0", "79228162514264337593543950335")]
+
+        [Range(typeof(decimal), "0", "79228162514264337593543950335", ErrorMessage = "Sum must not be negative")]
         public decimal Sum { get; set; }
+
+        [Display(Name="Block account")]
         public bool IsBlocked { get; set; }
 
         [Required]

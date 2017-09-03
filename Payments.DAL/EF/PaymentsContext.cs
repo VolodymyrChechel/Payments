@@ -14,6 +14,7 @@ namespace Payments.DAL.EF
 
         public IDbSet<ClientProfile> ClientProfiles { get; set; }
         public IDbSet<Card> Cards { get; set; }
+        public IDbSet<Account> Accounts { get; set; }
         public IDbSet<CreditAccount> CreditAccounts { get; set; }
         public IDbSet<DebitAccount> DebitAccounts { get; set; }
         public IDbSet<Transaction> Transactions { get; set; }

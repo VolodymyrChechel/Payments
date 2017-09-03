@@ -9,9 +9,14 @@
 
 <p> @Model.FirstName @Model.SecondName | @Model.Email | @Model.VAT </p>
 
-<div>
-    <p> List of debit accounts: <p>
-    @Html.Action("Accounts", new {id = @Model.Id})
-    @Html.ActionLink("Add  new debit account", "CreateDebitAccount", new {id = Model.Id})
-    @Html.ActionLink("Create new debit account", "CreateDebitAccount", new { id = Model.Id})
+<div class="well">
+    <p> List of debit accounts</p>
+    @Html.Action("Accounts", new { id = @Model.Id })
+    @Html.ActionLink("Create new debit account", "CreateDebitAccount", new { id = Model.Id })
+
+</div>
+
+<div class="well">
+    <p>List of cards</p>
+    @Html.ActionLink("Create new debit card", "CreateDebitCard", new { id = Model.Id })
 </div>

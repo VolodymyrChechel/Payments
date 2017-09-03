@@ -16,5 +16,6 @@ namespace Payments.BLL.DTO
 
         public CreditCardType CreditCardTypes { get; set; }
 
+        public int? AccountAccountNumber { get; set; }
     }
 }

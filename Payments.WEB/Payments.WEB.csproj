@@ -245,6 +245,9 @@
     <Content Include="Areas\Admin\Views\Users\Show.cshtml" />
     <Content Include="Areas\Admin\Views\Users\Accounts.cshtml" />
     <Content Include="Areas\Admin\Views\Users\CreateDebitAccount.cshtml" />
+    <Content Include="Areas\Admin\Views\Users\DeleteAccount.cshtml" />
+    <Content Include="Areas\Admin\Views\Users\EditDebitAccount.cshtml" />
+    <Content Include="Areas\Admin\Views\Users\CreateDebitCard.cshtml" />
     <None Include="Scripts\jquery-3.1.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.1.1.js" />
     <Content Include="Scripts\jquery-3.1.1.min.js" />
@@ -273,6 +276,7 @@
     <Compile Include="Areas\Admin\Controllers\RequestsController.cs" />
     <Compile Include="Areas\Admin\Controllers\UsersController.cs" />
     <Compile Include="Areas\Admin\Models\DebitAccountViewModel.cs" />
+    <Compile Include="Areas\Admin\Models\DepositCardViewModel.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">

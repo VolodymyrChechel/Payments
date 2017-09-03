@@ -15,6 +15,7 @@ namespace Payments.DAL.Repositories
         private PaymentsContext db;
         
         private CardRepository cardRepository;
+        private AccountRepository accountRepository;
         private CreditAccountRepository creditAccountRepository;
         private DebitAccountRepository debitAccountRepository;
         private TransactionRepository transactionRepository;
@@ -48,6 +49,17 @@ namespace Payments.DAL.Repositories
                     creditAccountRepository = new CreditAccountRepository(db);
 
                 return creditAccountRepository;
+            }
+        }
+
+         public IRepository<Account> Accounts
+        {
+            get
+            {
+                if (accountRepository == null)
+                    accountRepository = new AccountRepository(db);
+
+                return accountRepository;
             }
         }
 

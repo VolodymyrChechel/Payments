@@ -1,12 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Web;
 using Payments.Common.Enums;
 
-namespace Payments.DAL.Entities
+namespace Payments.WEB.Areas.Admin.Models
 {
-    public class Card
+    public class DepositCardViewModel
     {
-        [Key]
+        [Required]
         public string CardNumber { get; set; }
 
         public DateTime ExpiryDate { get; set; }
@@ -15,10 +18,9 @@ namespace Payments.DAL.Entities
 
         public string Holder { get; set; }
 
+        [Required]
         public CreditCardType CreditCardTypes { get; set; }
-
+        
         public int? AccountAccountNumber { get; set; }
-        public virtual Account Account { get; set; }
-
     }
 }
