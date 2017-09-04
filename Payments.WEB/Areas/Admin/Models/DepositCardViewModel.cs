@@ -9,7 +9,6 @@ namespace Payments.WEB.Areas.Admin.Models
 {
     public class DepositCardViewModel
     {
-        [Required]
         public string CardNumber { get; set; }
 
         public DateTime ExpiryDate { get; set; }

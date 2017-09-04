@@ -1,5 +1,7 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using AutoMapper;
@@ -7,6 +9,8 @@ using Microsoft.AspNet.Identity;
 using Payments.BLL.DTO;
 using Payments.BLL.Infrastructure;
 using Payments.BLL.Interfaces;
+using Payments.BLL.Util;
+using Payments.Common.Enums;
 using Payments.DAL.Entities;
 using Payments.DAL.Interfaces;
 
@@ -99,6 +103,31 @@ namespace Payments.BLL.Services
 
             Database.Accounts.Delete(accountId.Value);
             Database.Save();
+        }
+
+        public void CreateCard(DepositCardDTO card)
+        {
+            Random random = new Random();
+
+            card.CVV = random.Next(1, 1000).ToString("D3");
+
+            if (card.CreditCardTypes == CreditCardType.AmericanExpress)
+            {
+                card.CardNumber = CreditCardNumberGenerator.GenerateAmericanExpressNumber();
+                card.CVV += random.Next(0, 10);
+            }
+            else if (card.CreditCardTypes == CreditCardType.MasterCard)
+                card.CardNumber = CreditCardNumberGenerator.GenerateMasterCardNumber();
+            else if (card.CreditCardTypes == CreditCardType.Visa)
+                card.CardNumber = CreditCardNumberGenerator.GenerateVisaNumber();
+
+            card.ExpiryDate = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, 1).AddYears(2);
+
+            var cardEntity = Mapper.Map<DepositCardDTO, Card>(card);
+
+            Database.Cards.Create(cardEntity);
+            Database.Save();
+
         }
     }
 }

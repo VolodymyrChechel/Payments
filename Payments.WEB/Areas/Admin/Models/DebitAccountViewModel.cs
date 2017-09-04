@@ -5,7 +5,9 @@ namespace Payments.WEB.Areas.Admin.Models
 {
     public class DebitAccountViewModel
     {
-        public string AccountNumber { get; set; }
+        public int AccountNumber { get; set; }
+        public string Name { get; set; }
+
 
         [Range(typeof(decimal), "0", "79228162514264337593543950335", ErrorMessage = "Sum must not be negative")]
         public decimal Sum { get; set; }

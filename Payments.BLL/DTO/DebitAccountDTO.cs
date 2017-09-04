@@ -6,8 +6,9 @@ namespace Payments.BLL.DTO
 {
     public class DebitAccountDTO
     {
-        public string AccountNumber { get; set; }
-
+        public int AccountNumber { get; set; }
+        public string Name { get; set; }
+        
         public decimal Sum { get; set; }
         public bool IsBlocked { get; set; }
 

@@ -11,6 +11,7 @@ namespace Payments.DAL.Entities
     {
         [Key]
         public int AccountNumber { get; set; }
+        public string Name { get; set; }
 
         public decimal Sum { get; set; }
         public bool IsBlocked { get; set; }

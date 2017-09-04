@@ -1,13 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
+using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using AutoMapper;
 using Microsoft.AspNet.Identity;
 using Payments.BLL.DTO;
 using Payments.BLL.Interfaces;
+using Payments.Common.Enums;
 using Payments.WEB.Areas.Admin.Models;
+using Payments.WEB.Util;
 
 namespace Payments.WEB.Areas.Admin.Controllers
 {
@@ -23,6 +28,8 @@ namespace Payments.WEB.Areas.Admin.Controllers
 
         public ActionResult List()
         {
+            ViewBag.Message = TempData["Message"]?.ToString();
+
             var list = service.GetProfiles();
 
             return View(list);
@@ -30,13 +37,20 @@ namespace Payments.WEB.Areas.Admin.Controllers
 
         public ActionResult Show(string id)
         {
-            var user = service.GetProfile(id);
-
-            if (user == null)
+            if (id == null)
             {
+                TempData["Message"] = "Id is not passed";
                 return RedirectToAction("List");
             }
+            var user = service.GetProfile(id);
             
+            if (user == null)
+            {
+                TempData["Message"] = "There is no user with id " + id;
+                return RedirectToAction("List");
+            }
+
+            ViewBag.Message = TempData["Message"]?.ToString();
             return View(user);
         }
 
@@ -72,6 +86,7 @@ namespace Payments.WEB.Areas.Admin.Controllers
                 var debitAccDto = Mapper.Map<DebitAccountViewModel, DebitAccountDTO>(debitAcc);
                 service.CreateDebitAccount(debitAccDto);
 
+                TempData["Message"] = "New debit account was created";
                 return RedirectToAction("Show", new { id = debitAcc.ClientProfileId});
             }
 
@@ -87,19 +102,35 @@ namespace Payments.WEB.Areas.Admin.Controllers
 
             if (accounts.Count() == 0)
             {
-                ViewBag.Message = "Profile has no debit accounts yet";
-                return RedirectToAction("List");
+                TempData["Message"] = "Profile has no available debit accounts. Create a new account before creating card";
+
+                return RedirectToAction("Show", new {id = id});
             }
 
             var items = new List<SelectListItem>();
             foreach (var account in accounts)
                 items.Add(new SelectListItem {Selected = false,
                     Text = "Account id: " + account.AccountNumber + ", sum on the account: " + account.Sum + ", currency: " + account.Currency,
-                    Value = account.AccountNumber});
+                    Value = account.AccountNumber.ToString()});
 
             ViewBag.DropDownListItems = items;
-
+            
             return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult CreateDebitCard(DepositCardViewModel card)
+        {
+            if (ModelState.IsValid)
+            {
+                var depositCardDto = Mapper.Map<DepositCardViewModel, DepositCardDTO>(card);
+                service.CreateCard(depositCardDto);
+                
+                return RedirectToAction("List");
+            }
+
+            return View(card);
         }
 
         [HttpGet]

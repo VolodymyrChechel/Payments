@@ -74,6 +74,7 @@
     <Compile Include="Services\ManageService.cs" />
     <Compile Include="Services\UserService.cs" />
     <Compile Include="Util\BLLMapperProfile.cs" />
+    <Compile Include="Util\CreditCardNumberGenerator.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

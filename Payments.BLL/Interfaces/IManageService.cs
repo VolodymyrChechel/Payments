@@ -11,7 +11,6 @@ namespace Payments.BLL.Interfaces
         IEnumerable<UserInfoDTO> GetProfiles();
         UserInfoDTO GetProfile(string id);
 
-        
         IEnumerable<DebitAccountDTO> GetDebitAccountsByProfile(string id, bool withoutCard = false);
 
         void CreateDebitAccount(DebitAccountDTO debitAccount);
@@ -23,5 +22,6 @@ namespace Payments.BLL.Interfaces
 
         void DeleteAccount(int? id);
 
+        void CreateCard(DepositCardDTO card);
     }
 }
