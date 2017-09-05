@@ -11,7 +11,8 @@ namespace Payments.BLL.Util
             CreateMap<ClientProfile, UserInfoDTO>().ForMember(dest => dest.Email, opts => opts.MapFrom(src => src.ApplicationUser.Email));
             CreateMap<DebitAccount, DebitAccountDTO>();
             CreateMap<DebitAccountDTO, DebitAccount>();
-            CreateMap<DepositCardDTO, Card>();
+            CreateMap<CardDto, Card>();
+            CreateMap<Card, CardDto>();
             //CreateMap<UserDTO, UserInfoDTO>();
         }
     }

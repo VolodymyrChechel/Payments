@@ -1,0 +1,16 @@
+﻿@{
+    ViewBag.Title = "Delete Card";
+}
+
+<h2>Delete Account</h2>
+<div class="text-danger">
+    Are you really want delete account @ViewBag.CardNumber
+</div>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.Hidden("id", (string)ViewBag.CardNumber)
+
+    <input class="btn btn-danger" type="submit" value="Delete" />
+}

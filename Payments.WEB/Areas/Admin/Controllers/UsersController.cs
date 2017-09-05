@@ -118,13 +118,21 @@ namespace Payments.WEB.Areas.Admin.Controllers
             return View();
         }
 
+        [HttpGet]
+        public ActionResult CardsList(string id)
+        {
+            var accounts = service.GetCardsByProfile(id);
+
+            return PartialView(accounts);
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult CreateDebitCard(DepositCardViewModel card)
         {
             if (ModelState.IsValid)
             {
-                var depositCardDto = Mapper.Map<DepositCardViewModel, DepositCardDTO>(card);
+                var depositCardDto = Mapper.Map<DepositCardViewModel, CardDto>(card);
                 service.CreateCard(depositCardDto);
                 
                 return RedirectToAction("List");
@@ -177,7 +185,16 @@ namespace Payments.WEB.Areas.Admin.Controllers
 
         [HttpPost, ActionName("DeleteAccount")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int? id)
+        public ActionResult DeleteAccountConfirmed(int? id)
+        {
+            service.DeleteAccount(id.Value);
+
+            return RedirectToAction("List");
+        }
+
+        [HttpPost, ActionName("DeleteCard")]
+        [ValidateAntiForgeryToken]
+        public ActionResult DeleteCardConfirmed(string id)
         {
             service.DeleteAccount(id.Value);
 

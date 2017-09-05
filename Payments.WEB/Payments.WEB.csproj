@@ -248,6 +248,8 @@
     <Content Include="Areas\Admin\Views\Users\DeleteAccount.cshtml" />
     <Content Include="Areas\Admin\Views\Users\EditDebitAccount.cshtml" />
     <Content Include="Areas\Admin\Views\Users\CreateDebitCard.cshtml" />
+    <Content Include="Areas\Admin\Views\Users\CardsList.cshtml" />
+    <Content Include="Areas\Admin\Views\Users\DeleteCard.cshtml" />
     <None Include="Scripts\jquery-3.1.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.1.1.js" />
     <Content Include="Scripts\jquery-3.1.1.min.js" />

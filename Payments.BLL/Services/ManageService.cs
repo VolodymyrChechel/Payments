@@ -105,12 +105,17 @@ namespace Payments.BLL.Services
             Database.Save();
         }
 
-        public void CreateCard(DepositCardDTO card)
+        public void CreateCard(CardDto card)
         {
             Random random = new Random();
 
-            card.CVV = random.Next(1, 1000).ToString("D3");
+            //danger
+            var cardHolder = Database.Accounts.Get(card.AccountAccountNumber.Value).ClientProfile;
+            card.Holder = cardHolder.FirstName + " " + cardHolder.SecondName;
+            //end danger
 
+            card.CVV = random.Next(1, 1000).ToString("D3");
+            
             if (card.CreditCardTypes == CreditCardType.AmericanExpress)
             {
                 card.CardNumber = CreditCardNumberGenerator.GenerateAmericanExpressNumber();
@@ -123,11 +128,32 @@ namespace Payments.BLL.Services
 
             card.ExpiryDate = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, 1).AddYears(2);
 
-            var cardEntity = Mapper.Map<DepositCardDTO, Card>(card);
+            var cardEntity = Mapper.Map<CardDto, Card>(card);
 
             Database.Cards.Create(cardEntity);
             Database.Save();
 
         }
+
+        public IEnumerable<CardDto> GetCardsByProfile(string id)
+        {
+            if(id == null)
+                throw new ValidationException("Id was not passed", "");
+
+            var accounts = Database.Accounts.Find(acc => acc.ClientProfile.Id == id).Include(acc => acc.Cards).SelectMany(acc => acc.Cards).ToList();
+
+            var accountsDto = Mapper.Map<IEnumerable<Card>, IEnumerable<CardDto>>(accounts);
+
+            return accountsDto;
+        }
+
+        void DeleteCard(string number)
+        {
+            if (number == null)
+                throw new ValidationException("Number was not passed", "");
+
+            Database.Cards.Delete();
+        }
+
     }
 }

@@ -4,7 +4,7 @@ using Payments.DAL.Entities;
 
 namespace Payments.BLL.DTO
 {
-    public class DepositCardDTO
+    public class CardDto
     {
         public string CardNumber { get; set; }
 

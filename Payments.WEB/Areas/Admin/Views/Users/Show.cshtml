@@ -18,5 +18,6 @@
 
 <div class="well">
     <p>List of cards</p>
+    @Html.ActionLink("Show credit cards", "CardsList", new {id = Model.Id})
     @Html.ActionLink("Create new debit card", "CreateDebitCard", new { id = Model.Id })
 </div>
