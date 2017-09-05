@@ -23,7 +23,7 @@ namespace Payments.DAL.Repositories
             return db.Cards;
         }
 
-        public Card Get(int id)
+        public Card Get(object id)
         {
             return db.Cards.Find(id);
         }
@@ -43,7 +43,7 @@ namespace Payments.DAL.Repositories
             db.Entry(item).State = EntityState.Modified;
         }
 
-        public void Delete(int id)
+        public void Delete(object id)
         {
             Card card = db.Cards.Find(id);
             if (card != null)

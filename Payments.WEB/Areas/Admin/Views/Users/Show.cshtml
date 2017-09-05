@@ -11,13 +11,13 @@
 <p class="text-info"> @Model.FirstName @Model.SecondName | @Model.Email | @Model.VAT </p>
 
 <div class="well">
-    <p> List of debit accounts</p>
+    <p><strong> List of debit accounts</strong></p>
     @Html.Action("Accounts", new { id = @Model.Id })
     @Html.ActionLink("Create new debit account", "CreateDebitAccount", new { id = Model.Id })
 </div>
 
 <div class="well">
-    <p>List of cards</p>
-    @Html.ActionLink("Show credit cards", "CardsList", new {id = Model.Id})
+    <p><strong>List of cards</strong></p>
+    @Html.Action("CardsList", new { id = Model.Id })
     @Html.ActionLink("Create new debit card", "CreateDebitCard", new { id = Model.Id })
 </div>

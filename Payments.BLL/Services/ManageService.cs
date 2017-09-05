@@ -55,7 +55,8 @@ namespace Payments.BLL.Services
         {
             var account = Mapper.Map<DebitAccountDTO, DebitAccount>(accountDto);
             var user = Database.ClientManager.Get(accountDto.ClientProfileId);
-            account.ClientProfile = user;
+            
+            account.ClientProfile = user ?? throw new ValidationException("User was not found", "Client profile");
             Database.DebitAccounts.Create(account);
             user.Accounts.Add(account);
             Database.Save();
@@ -100,7 +101,7 @@ namespace Payments.BLL.Services
         {
             if (accountId == null)
                 throw new ValidationException("Accounts id was not passed", "");
-
+            
             Database.Accounts.Delete(accountId.Value);
             Database.Save();
         }
@@ -109,11 +110,13 @@ namespace Payments.BLL.Services
         {
             Random random = new Random();
 
-            //danger
-            var cardHolder = Database.Accounts.Get(card.AccountAccountNumber.Value).ClientProfile;
-            card.Holder = cardHolder.FirstName + " " + cardHolder.SecondName;
-            //end danger
+            if (card.Holder == null)
+            {
+                var cardHolder = Database.Accounts.Get(card.AccountAccountNumber.Value).ClientProfile;
+                card.Holder = cardHolder.FirstName + " " + cardHolder.SecondName;
+            }
 
+            // generate credit card number and CVV code 
             card.CVV = random.Next(1, 1000).ToString("D3");
             
             if (card.CreditCardTypes == CreditCardType.AmericanExpress)
@@ -126,13 +129,20 @@ namespace Payments.BLL.Services
             else if (card.CreditCardTypes == CreditCardType.Visa)
                 card.CardNumber = CreditCardNumberGenerator.GenerateVisaNumber();
 
+            // generate expiry date
             card.ExpiryDate = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, 1).AddYears(2);
 
             var cardEntity = Mapper.Map<CardDto, Card>(card);
 
             Database.Cards.Create(cardEntity);
             Database.Save();
+        }
 
+        public bool IsCardExist(string number)
+        {
+            var card = Database.Cards.Get(number);
+
+            return card != null;
         }
 
         public IEnumerable<CardDto> GetCardsByProfile(string id)
@@ -140,19 +150,20 @@ namespace Payments.BLL.Services
             if(id == null)
                 throw new ValidationException("Id was not passed", "");
 
-            var accounts = Database.Accounts.Find(acc => acc.ClientProfile.Id == id).Include(acc => acc.Cards).SelectMany(acc => acc.Cards).ToList();
+            var accounts = Database.Accounts.Find(acc => acc.ClientProfile.Id == id as string).Include(acc => acc.Cards).SelectMany(acc => acc.Cards).ToList();
 
             var accountsDto = Mapper.Map<IEnumerable<Card>, IEnumerable<CardDto>>(accounts);
 
             return accountsDto;
         }
 
-        void DeleteCard(string number)
+        public void DeleteCard(string number)
         {
             if (number == null)
                 throw new ValidationException("Number was not passed", "");
 
-            Database.Cards.Delete();
+            Database.Cards.Delete(number);
+            Database.Save();
         }
 
     }

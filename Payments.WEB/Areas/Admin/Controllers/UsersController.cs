@@ -9,6 +9,7 @@ using System.Web.Mvc;
 using AutoMapper;
 using Microsoft.AspNet.Identity;
 using Payments.BLL.DTO;
+using Payments.BLL.Infrastructure;
 using Payments.BLL.Interfaces;
 using Payments.Common.Enums;
 using Payments.WEB.Areas.Admin.Models;
@@ -37,6 +38,8 @@ namespace Payments.WEB.Areas.Admin.Controllers
 
         public ActionResult Show(string id)
         {
+            TempData["UserId"] = id;
+
             if (id == null)
             {
                 TempData["Message"] = "Id is not passed";
@@ -71,6 +74,9 @@ namespace Payments.WEB.Areas.Admin.Controllers
         [HttpGet]
         public ActionResult CreateDebitAccount(string id)
         {
+            if (id == null)
+                return RedirectToAction("List");
+
             var debitAcc = new DebitAccountViewModel();
             debitAcc.ClientProfileId = id;
 
@@ -121,20 +127,36 @@ namespace Payments.WEB.Areas.Admin.Controllers
         [HttpGet]
         public ActionResult CardsList(string id)
         {
-            var accounts = service.GetCardsByProfile(id);
+            try
+            {
+                var accounts = service.GetCardsByProfile(id);
+                return PartialView(accounts);
+            }
+            catch (ValidationException e)
+            {
+                TempData["Message"] = e.Message;
+            }
 
-            return PartialView(accounts);
+            if (TempData["UserId"] != null)
+                    return RedirectToAction("Show", new { id = TempData["UserId"] });
+
+                return RedirectToAction("List");
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult CreateDebitCard(DepositCardViewModel card)
+        public ActionResult CreateDebitCard(CardViewModel card)
         {
             if (ModelState.IsValid)
             {
-                var depositCardDto = Mapper.Map<DepositCardViewModel, CardDto>(card);
+                var depositCardDto = Mapper.Map<CardViewModel, CardDto>(card);
                 service.CreateCard(depositCardDto);
-                
+
+                TempData["Message"] = "The new card was successfully created";
+
+                if (TempData["UserId"] != null)
+                    return RedirectToAction("Show", new { id = TempData["UserId"] });
+
                 return RedirectToAction("List");
             }
 
@@ -144,10 +166,22 @@ namespace Payments.WEB.Areas.Admin.Controllers
         [HttpGet]
         public ActionResult EditDebitAccount(int? id)
         {
-            var debitAcc = service.GetDebitAccount(id);
-            var debitAccViewModel = Mapper.Map<DebitAccountDTO, DebitAccountViewModel>(debitAcc);
+            try
+            {
+                var debitAcc = service.GetDebitAccount(id);
+                var debitAccViewModel = Mapper.Map<DebitAccountDTO, DebitAccountViewModel>(debitAcc);
 
-            return View(debitAccViewModel);
+                return View(debitAccViewModel);
+            }
+            catch (ValidationException e)
+            {
+                TempData["Message"] = e.Message;
+            }
+            if (TempData["UserId"] != null)
+                return RedirectToAction("Show", new { id = TempData["UserId"] });
+
+            return RedirectToAction("List");
+
         }
 
         [HttpPost]
@@ -171,15 +205,36 @@ namespace Payments.WEB.Areas.Admin.Controllers
         {
             if (id == null)
             {
-                return View("List");
+                ViewBag.Message = "Account's number was not passed";
+                return RedirectToAction("List");
             }
 
-            if(service.IsAccountExist(id.Value))
+            if (service.IsAccountExist(id.Value))
             {
                 ViewBag.AccountId = id;
                 return View();
             }
 
+            ViewBag.Message = "This account is not exist";
+            return RedirectToAction("List");
+        }
+
+        [HttpGet]
+        public ActionResult DeleteCard(string id)
+        {
+            if (id == null)
+            {
+                ViewBag.Message = "Card's name was not passed";
+                return View("List");
+            }
+
+            if (service.IsCardExist(id))
+            {
+                ViewBag.AccountId = id;
+                return View();
+            }
+
+            ViewBag.Message = "This card is not exist";
             return View("List");
         }
 
@@ -187,7 +242,18 @@ namespace Payments.WEB.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteAccountConfirmed(int? id)
         {
-            service.DeleteAccount(id.Value);
+            try
+            {
+                service.DeleteAccount(id.Value);
+                TempData["Message"] = "Account " + id + " was successfully deleted";
+            }
+            catch
+            {
+                TempData["Message"] = "Account " + id + " has binded card / operation / delete request  and shouldn't be deleted";
+            }
+
+            if (TempData["UserId"] != null)
+                return RedirectToAction("Show", new { id = TempData["UserId"] });
 
             return RedirectToAction("List");
         }
@@ -196,7 +262,11 @@ namespace Payments.WEB.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteCardConfirmed(string id)
         {
-            service.DeleteAccount(id.Value);
+            service.DeleteCard(id);
+            TempData["Message"] = "Card " + id + " was successfully deleted";
+
+            if (TempData["UserId"] != null)
+                return RedirectToAction("Show", new {id = TempData["UserId"]});
 
             return RedirectToAction("List");
         }

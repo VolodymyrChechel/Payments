@@ -4,6 +4,7 @@ using Payments.Common.Enums;
 
 namespace Payments.DAL.Entities
 {
+    // entity for a card
     public class Card
     {
         [Key]

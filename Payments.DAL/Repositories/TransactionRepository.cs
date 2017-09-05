@@ -23,7 +23,7 @@ namespace Payments.DAL.Repositories
             return db.Transactions;
         }
 
-        public Transaction Get(int id)
+        public Transaction Get(object id)
         {
             return db.Transactions.Find(id);
         }
@@ -43,7 +43,7 @@ namespace Payments.DAL.Repositories
             db.Entry(item).State = EntityState.Modified;
         }
 
-        public void Delete(int id)
+        public void Delete(object id)
         {
             Transaction transaction = db.Transactions.Find(id);
 

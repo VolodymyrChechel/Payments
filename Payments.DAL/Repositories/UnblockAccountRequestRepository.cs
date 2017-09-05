@@ -22,7 +22,7 @@ namespace Payments.DAL.Repositories
             return db.UnblockAccountRequests;
         }
 
-        public UnblockAccountRequest Get(int id)
+        public UnblockAccountRequest Get(object id)
         {
             return db.UnblockAccountRequests.Find(id);
         }
@@ -42,7 +42,7 @@ namespace Payments.DAL.Repositories
             db.Entry(item).State = EntityState.Modified;
         }
 
-        public void Delete(int id)
+        public void Delete(object id)
         {
             UnblockAccountRequest request = db.UnblockAccountRequests.Find(id);
 

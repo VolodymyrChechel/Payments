@@ -250,6 +250,7 @@
     <Content Include="Areas\Admin\Views\Users\CreateDebitCard.cshtml" />
     <Content Include="Areas\Admin\Views\Users\CardsList.cshtml" />
     <Content Include="Areas\Admin\Views\Users\DeleteCard.cshtml" />
+    <Content Include="Areas\Admin\Views\Shared\_Layout.cshtml" />
     <None Include="Scripts\jquery-3.1.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.1.1.js" />
     <Content Include="Scripts\jquery-3.1.1.min.js" />
@@ -278,7 +279,7 @@
     <Compile Include="Areas\Admin\Controllers\RequestsController.cs" />
     <Compile Include="Areas\Admin\Controllers\UsersController.cs" />
     <Compile Include="Areas\Admin\Models\DebitAccountViewModel.cs" />
-    <Compile Include="Areas\Admin\Models\DepositCardViewModel.cs" />
+    <Compile Include="Areas\Admin\Models\CardViewModel.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
@@ -312,7 +313,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Areas\Admin\Views\Shared\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Payments.BLL\Payments.BLL.csproj">

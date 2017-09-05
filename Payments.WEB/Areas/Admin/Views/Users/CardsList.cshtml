@@ -1,32 +1,41 @@
 ﻿@model IEnumerable<Payments.BLL.DTO.CardDto>
 
-<div class="clearfix">
-    <table class="table">
-        <thead>
+
+@if (Model.Count() != 0)
+{
+    <div class="clearfix">
+        <table class="table">
+            <thead>
             <tr>
                 <th class="col-md-1">Card number</th>
+                <th>Account</th>
                 <th>Card type</th>
                 <th>Expiry date</th>
                 <th>CVV</th>
                 <th>Holder</th>
                 <th></th>
             </tr>
-        </thead>
-        <tbody>
+            </thead>
+            <tbody>
             @foreach (var card in Model)
             {
                 <tr>
                     <td> @card.CardNumber </td>
+                    <td> @card.AccountAccountNumber </td>
                     <td> @card.CreditCardTypes </td>
                     <td> @card.ExpiryDate </td>
                     <td> @card.CVV </td>
                     <td> @card.Holder </td>
                     <td>
-                        @Html.ActionLink("Delete", "DeleteCard", new { id = card.CardNumber }) |
-                        @Html.ActionLink("Edit", "EditDebitCard", new { id = card.CardNumber })
+                        @Html.ActionLink("Delete", "DeleteCard", new {id = card.CardNumber})
                     </td>
                 </tr>
             }
-        </tbody>
-    </table>
-</div>
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <p class="text-danger"> This user has no card </p>
+}

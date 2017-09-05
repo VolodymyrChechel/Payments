@@ -22,7 +22,7 @@ namespace Payments.DAL.Repositories
             return db.DebitAccounts;
         }
 
-        public DebitAccount Get(int id)
+        public DebitAccount Get(object id)
         {
             return db.DebitAccounts.Find(id);
         }
@@ -42,7 +42,7 @@ namespace Payments.DAL.Repositories
             db.Entry(item).State = EntityState.Modified;
         }
 
-        public void Delete(int id)
+        public void Delete(object id)
         {
             DebitAccount debitAcc = db.DebitAccounts.Find(id);
 

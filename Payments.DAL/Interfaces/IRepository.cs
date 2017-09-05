@@ -8,10 +8,10 @@ namespace Payments.DAL.Interfaces
     public interface IRepository<T> where T : class
     {
         IQueryable<T> GetAll();
-        T Get(int id);
+        T Get(object key);
         IQueryable<T> Find(Func<T, bool> predicate);
         void Create(T item);
         void Update(T item);
-        void Delete(int id);
+        void Delete(object id);
     }
 }

@@ -1,11 +1,11 @@
 ﻿@using System.Collections
-@model Payments.WEB.Areas.Admin.Models.DepositCardViewModel
+@model Payments.WEB.Areas.Admin.Models.CardViewModel
 
 @{
-    ViewBag.Title = "AddDebitCard";
+    ViewBag.Title = "Creating a new debit card";
 }
 
-<h2>AddDebitCard</h2>
+<h2>Adding a new debit account</h2>
 
 @using (Html.BeginForm("CreateDebitCard", "Users", null, FormMethod.Post, new { @class = "form-horizontal" }))
 {
@@ -23,6 +23,11 @@
     <div class="form-group">
         @Html.LabelFor(model => model.AccountAccountNumber, new { @class = "col-md-2 control-label" })
         <div class="col-md-6"> @Html.DropDownListFor(model => model.AccountAccountNumber, new SelectList(ViewBag.DropDownListItems, "Value", "Text"), new { @class = "form-control" }) </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Holder, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10"> @Html.TextBoxFor(model => model.Holder, new { @class = "form-control"}) </div>
     </div>
 
     <div class="form-group">
