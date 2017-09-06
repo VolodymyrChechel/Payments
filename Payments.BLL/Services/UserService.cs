@@ -93,45 +93,11 @@ namespace Payments.BLL.Services
 
             // adding admin
             await Create(adminDto);
-            //ApplicationUser user = await db.UserManager.FindByEmailAsync(adminDto.Email);
-
-            //if (user == null)
-            //{
-            //    user = new ApplicationUser { Email = adminDto.Email, UserName = adminDto.Email };
-
-            //    var result = await db.UserManager.CreateAsync(user, adminDto.Password);
-            //    if (result.Errors.Count() > 0)
-            //    {
-            //        await db.UserManager.AddToRoleAsync(user.Id, adminDto.Role);
-            //    }
-
-            //    //await db.SaveAsync();
-            //}
-
-            // adding initial users
+           
             foreach (var userDto in usersDto)
             {
                 await Create(userDto);
-                //user = null;
-                //user = await db.UserManager.FindByEmailAsync(userDto.Email);
-
-                //if (user == null)
-                //{
-                //    user = new ApplicationUser { Email = userDto.Email, UserName = userDto.Email };
-
-                //    var result = await db.UserManager.CreateAsync(user, userDto.Password);
-                //    if (result.Errors.Count() > 0)
-                //    {
-                //        await db.UserManager.AddToRoleAsync(user.Id, userDto.Role);
-
-                //        var client = Mapper.Map<UserDTO, ClientProfile>(userDto);
-                //        client.Id = user.Id;
-                //        db.ClientManager.Create(client);
-                //    }
-                //}
             }
-
-            //await db.SaveAsync();
         }
 
         public void Dispose()

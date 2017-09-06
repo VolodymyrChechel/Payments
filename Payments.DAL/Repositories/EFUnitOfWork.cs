@@ -18,7 +18,7 @@ namespace Payments.DAL.Repositories
         private AccountRepository accountRepository;
         private CreditAccountRepository creditAccountRepository;
         private DebitAccountRepository debitAccountRepository;
-        private TransactionRepository transactionRepository;
+        private PaymentRepository paymentRepository;
         private UnblockAccountRequestRepository unblockAccountRequestRepository;
 
         private ApplicationUserManager userManager;
@@ -74,14 +74,14 @@ namespace Payments.DAL.Repositories
             }
         }
 
-        public IRepository<Transaction> Transactions
+        public IRepository<Payment> Payments
         {
             get
             {
-                if(transactionRepository == null)
-                    transactionRepository = new TransactionRepository(db);
+                if(paymentRepository == null)
+                    paymentRepository = new PaymentRepository(db);
 
-                return transactionRepository;
+                return paymentRepository;
             }
         }
 

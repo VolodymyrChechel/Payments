@@ -61,24 +61,19 @@
     <Compile Include="Entities\ClientProfile.cs" />
     <Compile Include="Entities\CreditAccount.cs" />
     <Compile Include="Entities\DebitAccount.cs" />
-    <Compile Include="Entities\Transaction.cs" />
+    <Compile Include="Entities\Payment.cs" />
     <Compile Include="Entities\UnblockAccountRequest.cs" />
     <Compile Include="Identity\ApplicationRoleManager.cs" />
     <Compile Include="Identity\ApplicationUserManager.cs" />
     <Compile Include="Interfaces\IClientManager.cs" />
     <Compile Include="Interfaces\IRepository.cs" />
     <Compile Include="Interfaces\IUnitOfWork.cs" />
-    <Compile Include="Migrations\201709051515535_transaction new fields.cs" />
-    <Compile Include="Migrations\201709051515535_transaction new fields.Designer.cs">
-      <DependentUpon>201709051515535_transaction new fields.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\ClientManager.cs" />
     <Compile Include="Repositories\AccountRepository.cs" />
     <Compile Include="Repositories\EFUnitOfWork.cs" />
     <Compile Include="Repositories\UnblockAccountRequestRepository.cs" />
-    <Compile Include="Repositories\TransactionRepository.cs" />
+    <Compile Include="Repositories\PaymentRepository.cs" />
     <Compile Include="Repositories\DebitAccountRepository.cs" />
     <Compile Include="Repositories\CreditAccountRepository.cs" />
     <Compile Include="Repositories\CardRepository .cs" />
@@ -92,11 +87,6 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Migrations\201709051515535_transaction new fields.resx">
-      <DependentUpon>201709051515535_transaction new fields.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

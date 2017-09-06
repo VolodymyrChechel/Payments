@@ -24,7 +24,7 @@ namespace Payments.DAL.Repositories
 
         public Account Get(object id)
         {
-            return db.Accounts.Find(id);
+            return db.Accounts.Find(Convert.ToInt32(id));
         }
 
         public IQueryable<Account> Find(Func<Account, bool> predicate)

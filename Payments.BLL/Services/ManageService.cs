@@ -166,22 +166,49 @@ namespace Payments.BLL.Services
             Database.Save();
         }
 
-        public void Repleish(int? accountNumber, decimal addmission)
+        public void Replenish(PaymentDTO paymentDto)
         {
-            var account = Database.Accounts.Get(accountNumber);
-
-            if(account == null)
+            if(paymentDto == null)
                 throw new ValidationException("Account is not found", "");
 
-            var transaction = new Transaction
-            {
-                TransactionStatus = TransactionStatus.Prepared,
-                TransactionType = TransactionType.Repleish,
-                TransactionSum = addmission
-            };
-            
-            Database.Transactions.Create(transaction);
-            account.Transactions.Add(transaction);
+            var payment = Mapper.Map<PaymentDTO, Payment>(paymentDto);
+            payment.PaymentDate = DateTime.UtcNow;
+            payment.PaymentType = PaymentType.Replenish;
+
+            var account = Database.Accounts.Get(payment.Recipient);
+            account.Sum += payment.PaymentSum;
+            Database.Accounts.Update(account);
+
+            payment.PaymentStatus = PaymentStatus.Sent;
+            payment.Account = account;
+
+            Database.Payments.Create(payment);
+            Database.Save();
+        }
+
+        public void Withdraw(PaymentDTO paymentDto)
+        {
+            if (paymentDto == null)
+                throw new ValidationException("Account is not found", "");
+
+            var payment = Mapper.Map<PaymentDTO, Payment>(paymentDto);
+            payment.PaymentDate = DateTime.UtcNow;
+            payment.PaymentType = PaymentType.Withdraw;
+
+            var account = Database.Accounts.Get(payment.Recipient);
+
+            var finiteSum = account.Sum - payment.PaymentSum;
+
+            if (finiteSum < 0)
+                throw new ValidationException("Sum of withdrawal cannot be much than " + account.Sum, "Sum");
+
+            account.Sum = finiteSum;
+            Database.Accounts.Update(account);
+
+            payment.PaymentStatus = PaymentStatus.Sent;
+            payment.Account = account;
+
+            Database.Payments.Create(payment);
             Database.Save();
         }
 

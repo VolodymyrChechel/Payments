@@ -270,5 +270,100 @@ namespace Payments.WEB.Areas.Admin.Controllers
 
             return RedirectToAction("List");
         }
+
+        [HttpGet]
+        public ActionResult Replenish(int? id)
+        {
+            try
+            {
+                var account = service.GetDebitAccount(id);
+                var payment = new PaymentViewModel()
+                {
+                    Recipient = account.AccountNumber.ToString()
+                };
+
+                return View(payment);
+            }
+            catch (ValidationException e)
+            {
+                TempData["Message"] = e.Message;
+            }
+
+            if (TempData["UserId"] != null)
+                return RedirectToAction("Show", new { id = TempData["UserId"] });
+
+            return RedirectToAction("List");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Replenish(PaymentViewModel payment)
+        {
+            if (ModelState.IsValid)
+            {
+                var paymentDto = Mapper.Map<PaymentViewModel, PaymentDTO>(payment);
+
+                service.Replenish(paymentDto);
+            }
+
+            TempData["Message"] = "Account " + payment.Recipient + " was successfully replenished";
+
+            if (TempData["UserId"] != null)
+                return RedirectToAction("Show", new { id = TempData["UserId"] });
+
+            return RedirectToAction("List");
+        }
+
+        [HttpGet]
+        public ActionResult Withdraw(int? id)
+        {
+            try
+            {
+                var account = service.GetDebitAccount(id);
+                var payment = new PaymentViewModel()
+                {
+                    Recipient = account.AccountNumber.ToString()
+                };
+
+                return View(payment);
+            }
+            catch (ValidationException e)
+            {
+                TempData["Message"] = e.Message;
+            }
+
+            if (TempData["UserId"] != null)
+                return RedirectToAction("Show", new { id = TempData["UserId"] });
+
+            return RedirectToAction("List");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Withdraw(PaymentViewModel payment)
+        {
+            if (ModelState.IsValid)
+            {
+                var paymentDto = Mapper.Map<PaymentViewModel, PaymentDTO>(payment);
+
+                try
+                {
+                    service.Withdraw(paymentDto);
+
+                    TempData["Message"] = "Withdrawal from an account " + payment.Recipient + " was successfully";
+
+                    if (TempData["UserId"] != null)
+                        return RedirectToAction("Show", new { id = TempData["UserId"] });
+
+                    return RedirectToAction("List");
+                }
+                catch (ValidationException e)
+                {
+                    ModelState.AddModelError(e.Property, e.Message);
+                }
+            }
+
+            return View(payment);
+        }
     }
 }

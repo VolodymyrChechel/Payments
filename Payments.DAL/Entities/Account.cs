@@ -22,7 +22,7 @@ namespace Payments.DAL.Entities
 
         public virtual ClientProfile ClientProfile { get; set; }
         public virtual ICollection<Card> Cards { get; set; } 
-        public virtual ICollection<Transaction> Transactions { get; set; }
+        public virtual ICollection<Payment> Payments { get; set; }
         public virtual ICollection<UnblockAccountRequest> UnblockAccountRequests{ get; set; }
     }
 }

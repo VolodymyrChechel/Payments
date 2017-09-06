@@ -251,6 +251,8 @@
     <Content Include="Areas\Admin\Views\Users\CardsList.cshtml" />
     <Content Include="Areas\Admin\Views\Users\DeleteCard.cshtml" />
     <Content Include="Areas\Admin\Views\Shared\_Layout.cshtml" />
+    <Content Include="Areas\Admin\Views\Users\Replenish.cshtml" />
+    <Content Include="Areas\Admin\Views\Users\Withdraw.cshtml" />
     <None Include="Scripts\jquery-3.1.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.1.1.js" />
     <Content Include="Scripts\jquery-3.1.1.min.js" />
@@ -268,7 +270,9 @@
     <Content Include="Scripts\moment-with-locales.min.js" />
     <Content Include="Scripts\moment.js" />
     <Content Include="Scripts\moment.min.js" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\AutoMapperConfiguration.cs" />
@@ -280,6 +284,7 @@
     <Compile Include="Areas\Admin\Controllers\UsersController.cs" />
     <Compile Include="Areas\Admin\Models\DebitAccountViewModel.cs" />
     <Compile Include="Areas\Admin\Models\CardViewModel.cs" />
+    <Compile Include="Areas\Admin\Models\PaymentViewModel.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">

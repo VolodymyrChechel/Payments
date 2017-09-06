@@ -13,7 +13,7 @@ namespace Payments.DAL.Interfaces
         IRepository<Account> Accounts { get; }
         IRepository<CreditAccount> CreditAccounts { get; }
         IRepository<DebitAccount> DebitAccounts { get; }
-        IRepository<Transaction> Transactions { get; }
+        IRepository<Payment> Payments { get; }
         IRepository<UnblockAccountRequest> UnblockAccountRequests { get; }
         void Save();
 

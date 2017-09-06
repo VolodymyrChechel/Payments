@@ -62,6 +62,7 @@
     <Compile Include="DTO\DebitAccountDTO.cs" />
     <Compile Include="DTO\CardDTO.cs" />
     <Compile Include="DTO\CreditCardDTO.cs" />
+    <Compile Include="DTO\PaymentDTO.cs" />
     <Compile Include="DTO\UserInfoDTO.cs" />
     <Compile Include="DTO\UserDTO.cs" />
     <Compile Include="Infrastructure\ServiceModule.cs" />

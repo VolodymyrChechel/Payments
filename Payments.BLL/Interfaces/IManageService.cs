@@ -27,6 +27,8 @@ namespace Payments.BLL.Interfaces
         void DeleteCard(string number);
 
         // operations refer to transaction
-        void Repleish(int? accountNumber, decimal addmission);
+        void Replenish(PaymentDTO payment);
+        void Withdraw(PaymentDTO payment);
+
     }
 }

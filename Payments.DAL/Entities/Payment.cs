@@ -9,21 +9,21 @@ using Payments.Common.Enums;
 
 namespace Payments.DAL.Entities
 {
-    public class Transaction
+    public class Payment
     {
         public int Id { get; set; }
 
         [Required]
-        public decimal TransactionSum { get; set; }
+        public decimal PaymentSum { get; set; }
 
         [Required]
-        public TransactionType TransactionType { get; set; }
+        public PaymentType PaymentType { get; set; }
 
         [Required]
-        public TransactionStatus TransactionStatus { get; set; }
+        public PaymentStatus PaymentStatus { get; set; }
 
         [Required]
-        public DateTime TransactionDate { get; set; }
+        public DateTime PaymentDate { get; set; }
 
         public string Recipient { get; set; }
         public string Comment { get; set; }
