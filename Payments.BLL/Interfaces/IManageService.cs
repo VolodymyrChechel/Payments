@@ -2,6 +2,7 @@
 using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using Payments.BLL.DTO;
+using Payments.DAL.Entities;
 
 namespace Payments.BLL.Interfaces
 {
@@ -26,9 +27,13 @@ namespace Payments.BLL.Interfaces
         IEnumerable<CardDto> GetCardsByProfile(string id);
         void DeleteCard(string number);
 
-        // operations refer to transaction
+        // operations refer to payment
         void Replenish(PaymentDTO payment);
         void Withdraw(PaymentDTO payment);
+        void Payment(PaymentDTO payment);
+
+        IEnumerable<PaymentDTO> GetPaymentsByProfile(string id);
+
 
     }
 }

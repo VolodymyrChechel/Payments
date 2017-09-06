@@ -365,5 +365,86 @@ namespace Payments.WEB.Areas.Admin.Controllers
 
             return View(payment);
         }
+
+        // create payment with certain account
+        [HttpGet]
+        public ActionResult Payment(int id)
+        {
+            var account = service.GetDebitAccount(id);
+
+            if (account == null)
+            {
+                TempData["Message"] = "There is no  account with id " + id;
+
+                if (TempData["UserId"] != null)
+                    return RedirectToAction("Show", new { id = TempData["UserId"] });
+
+                return RedirectToAction("List");
+            }
+
+            var payment = new PaymentViewModel
+            {
+                AccountAccountNumber = account.AccountNumber
+            };
+            /*
+            var items = new List<SelectListItem>();
+            foreach (var account in accounts)
+                items.Add(new SelectListItem
+                {
+                    Selected = false,
+                    Text = "Account id: " + account.AccountNumber + ", sum on the account: " + account.Sum + ", currency: " + account.Currency,
+                    Value = account.AccountNumber.ToString()
+                });
+
+            ViewBag.DropDownListItems = items;*/
+
+            return View(payment);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Payment(PaymentViewModel payment)
+        {
+            if(ModelState.IsValid)
+            {
+                var paymentDto = Mapper.Map<PaymentViewModel, PaymentDTO>(payment);
+
+                service.Payment(paymentDto);
+
+                TempData["Message"] = "Payment account " + payment.AccountAccountNumber + " was sent to processing";
+
+                if (TempData["UserId"] != null)
+                    return RedirectToAction("Show", new { id = TempData["UserId"] });
+
+                return RedirectToAction("List");
+            }
+
+            return View(payment);
+        }
+
+        public ActionResult PaymentsList(string id)
+        {
+            try
+            {
+                var listDto = service.GetPaymentsByProfile(id);
+
+                var list = Mapper.Map<IEnumerable<PaymentDTO>, IEnumerable<PaymentViewModel>>(listDto);
+
+                return View(list);
+            }
+            catch (ValidationException e)
+            {
+                TempData["Message"] = e.Message;
+            }
+
+            if (TempData["UserId"] != null)
+                return RedirectToAction("Show", new { id = TempData["UserId"] });
+
+            return RedirectToAction("List");
+        }
+
+        
+
+        //public ActionResult ConfirmPayment()
     }
 }

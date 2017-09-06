@@ -1,0 +1,47 @@
+﻿@using Payments.Common.Enums
+@model IEnumerable<Payments.WEB.Areas.Admin.Models.PaymentViewModel>
+@{
+    Layout = null;
+}
+
+@if (Model.Count() != 0)
+{
+    <div class="clearfix">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th class="col-md-1">Payment numer</th>
+                    <th>Payment's date</th>
+                    <th>Sum</th>
+                    <th>Type</th>
+                    <th>Recipient</th>
+                    <th>Status</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var payment in Model)
+                {
+                    <tr>
+                        <td> @payment.Id </td>
+                        <td> @payment.PaymentDate</td>
+                        <td> @payment.PaymentSum </td>
+                        <td> @payment.PaymentType </td>
+                        <td> @payment.Recipient </td>
+                        <td> @payment.PaymentStatus </td>
+                        <td>
+                            @if (payment.PaymentStatus == PaymentStatus.Prepared)
+                            {
+                                @Html.ActionLink("Confirm payment", "ConfirmPayment", new {id = @payment.Id})
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <p class="text-danger"> This user has no payments yet </p>
+}

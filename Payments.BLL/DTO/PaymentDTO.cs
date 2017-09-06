@@ -25,5 +25,7 @@ namespace Payments.BLL.DTO
         public string Recipient { get; set; }
 
         public string Comment { get; set; }
+
+        public int AccountAccountNumber { get; set; }
     }
 }

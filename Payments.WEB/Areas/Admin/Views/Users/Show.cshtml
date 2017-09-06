@@ -21,3 +21,9 @@
     @Html.Action("CardsList", new { id = Model.Id })
     @Html.ActionLink("Create new debit card", "CreateDebitCard", new { id = Model.Id })
 </div>
+
+<div class="well">
+    <p><strong>List of payments</strong></p>
+    @Html.Action("PaymentsList", new { id = Model.Id })
+    @Html.ActionLink("Create a payment", "CreatePayment", new { id = Model.Id })
+</div>

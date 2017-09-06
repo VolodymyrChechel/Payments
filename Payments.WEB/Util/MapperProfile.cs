@@ -14,6 +14,7 @@ namespace Payments.WEB.Util
             CreateMap<DebitAccountViewModel, DebitAccountDTO>();
             CreateMap<CardViewModel, CardDto>();
             CreateMap<PaymentViewModel, PaymentDTO>();
+            CreateMap<PaymentDTO, PaymentViewModel>();
 
             //CreateMap<UserDTO, UserInfoDTO>();
         }

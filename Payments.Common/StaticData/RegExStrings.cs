@@ -7,5 +7,6 @@
         public const string Name = @"^[A-Z][A-Za-z- ]*$";
         public const string Phone = @"^380[\d]{9}$";
         public const string HolderName = @"^([A-Z][a-z]+ ?){2,}$";
+        public const string SumNumber = @"^\d+(\.\d{1,2})?$";
     }
 }

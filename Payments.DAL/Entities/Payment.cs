@@ -28,6 +28,7 @@ namespace Payments.DAL.Entities
         public string Recipient { get; set; }
         public string Comment { get; set; }
         
+        public int AccountAccountNumber { get; set; }
         public virtual Account Account { get; set; }
     }
 }

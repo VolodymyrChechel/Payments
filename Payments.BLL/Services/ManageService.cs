@@ -39,7 +39,7 @@ namespace Payments.BLL.Services
             return Mapper.Map<ClientProfile, UserInfoDTO>(client);
         }
 
-        public IEnumerable<DebitAccountDTO> GetDebitAccountsByProfile(string profileId, bool withoutCard)
+        public IEnumerable<DebitAccountDTO> GetDebitAccountsByProfile(string profileId, bool withoutCard = false)
         {
             var accountsList = Database.DebitAccounts.Find(debAcc => debAcc.ClientProfileId == profileId).Include(debAcc => debAcc.Cards).ToList();
 
@@ -169,7 +169,7 @@ namespace Payments.BLL.Services
         public void Replenish(PaymentDTO paymentDto)
         {
             if(paymentDto == null)
-                throw new ValidationException("Account is not found", "");
+                throw new ValidationException("Payment object is not passed", "");
 
             var payment = Mapper.Map<PaymentDTO, Payment>(paymentDto);
             payment.PaymentDate = DateTime.UtcNow;
@@ -189,7 +189,7 @@ namespace Payments.BLL.Services
         public void Withdraw(PaymentDTO paymentDto)
         {
             if (paymentDto == null)
-                throw new ValidationException("Account is not found", "");
+                throw new ValidationException("Payment object is not passed", "");
 
             var payment = Mapper.Map<PaymentDTO, Payment>(paymentDto);
             payment.PaymentDate = DateTime.UtcNow;
@@ -212,6 +212,43 @@ namespace Payments.BLL.Services
             Database.Save();
         }
 
+        public void Payment(PaymentDTO paymentDto)
+        {
+            if (paymentDto == null)
+                throw new ValidationException("Payment object is not passed", "");
+            
+            var payment = Mapper.Map<PaymentDTO, Payment>(paymentDto);
+            payment.PaymentDate = DateTime.UtcNow;
+            payment.PaymentType = PaymentType.Payment;
 
+            var account = Database.Accounts.Get(payment.AccountAccountNumber);
+            if (account == null)
+                throw new ValidationException("Cannot find the account", "");
+
+            var finiteSum = account.Sum - payment.PaymentSum;
+
+            if (finiteSum< 0)
+                throw new ValidationException("Sum of payment cannot be much than " + account.Sum, "Sum");
+
+            payment.PaymentStatus = PaymentStatus.Sent;
+            payment.Account = account;
+
+            Database.Payments.Create(payment);
+            Database.Save();
+        }
+
+    public IEnumerable<PaymentDTO> GetPaymentsByProfile(string id)
+        {
+            if(id == null)
+                throw new ValidationException("Cannot find user", "");
+
+            var paymentsList = Database.Accounts.
+                Find(account => account.ClientProfile.Id == id).
+                SelectMany(acc => acc.Payments).ToList();
+
+            var paymentsDtoList = Mapper.Map<List<Payment>, List<PaymentDTO>>(paymentsList);
+
+            return paymentsDtoList;
+        }
     }
 }
