@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.NetworkInformation;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNet.Identity;
 using Payments.BLL.DTO;
 using Payments.BLL.Infrastructure;
@@ -25,7 +26,6 @@ namespace Payments.BLL.Services
 
         public async Task<OperationDetails> Create(UserDTO userDto)
         {
-            userDto.Role = "user";
             ApplicationUser user = await db.UserManager.FindByEmailAsync(userDto.Email);
 
             if (user == null)
@@ -78,8 +78,9 @@ namespace Payments.BLL.Services
         }
 
         // initialization data
-        public async Task SetInitialData(UserDTO adminDto, List<string> roles)
+        public async Task SetInitialData(UserDTO adminDto, List<UserDTO> usersDto, List<string> roles)
         {
+            // adding initial roles
             foreach (var roleName in roles)
             {
                 var role = await db.RoleManager.FindByNameAsync(roleName);
@@ -89,22 +90,48 @@ namespace Payments.BLL.Services
                     await db.RoleManager.CreateAsync(role);
                 }
             }
-            //await Create(adminDto);
 
-            ApplicationUser user = await db.UserManager.FindByEmailAsync(adminDto.Email);
+            // adding admin
+            await Create(adminDto);
+            //ApplicationUser user = await db.UserManager.FindByEmailAsync(adminDto.Email);
 
-            if (user == null)
+            //if (user == null)
+            //{
+            //    user = new ApplicationUser { Email = adminDto.Email, UserName = adminDto.Email };
+
+            //    var result = await db.UserManager.CreateAsync(user, adminDto.Password);
+            //    if (result.Errors.Count() > 0)
+            //    {
+            //        await db.UserManager.AddToRoleAsync(user.Id, adminDto.Role);
+            //    }
+
+            //    //await db.SaveAsync();
+            //}
+
+            // adding initial users
+            foreach (var userDto in usersDto)
             {
-                user = new ApplicationUser { Email = adminDto.Email, UserName = adminDto.Email };
+                await Create(userDto);
+                //user = null;
+                //user = await db.UserManager.FindByEmailAsync(userDto.Email);
 
-                var result = await db.UserManager.CreateAsync(user, adminDto.Password);
-                if (result.Errors.Count() > 0)
-                {
-                    await db.UserManager.AddToRoleAsync(user.Id, adminDto.Role);
-                }
+                //if (user == null)
+                //{
+                //    user = new ApplicationUser { Email = userDto.Email, UserName = userDto.Email };
 
-                await db.SaveAsync();
+                //    var result = await db.UserManager.CreateAsync(user, userDto.Password);
+                //    if (result.Errors.Count() > 0)
+                //    {
+                //        await db.UserManager.AddToRoleAsync(user.Id, userDto.Role);
+
+                //        var client = Mapper.Map<UserDTO, ClientProfile>(userDto);
+                //        client.Id = user.Id;
+                //        db.ClientManager.Create(client);
+                //    }
+                //}
             }
+
+            //await db.SaveAsync();
         }
 
         public void Dispose()

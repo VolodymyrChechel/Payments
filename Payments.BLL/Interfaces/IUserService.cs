@@ -12,6 +12,6 @@ namespace Payments.BLL.Interfaces
     {
         Task<OperationDetails> Create(UserDTO userDto);
         Task<ClaimsIdentity> Authenticate(UserDTO userDto);
-        Task SetInitialData(UserDTO adminDto, List<string> roles);
+        Task SetInitialData(UserDTO adminDto, List<UserDTO> usersDto, List<string> roles);
     }
 }

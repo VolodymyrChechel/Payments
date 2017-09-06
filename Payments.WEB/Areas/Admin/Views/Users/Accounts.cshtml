@@ -37,7 +37,10 @@
                     </td>
                     <td>
                         @Html.ActionLink("Delete", "DeleteAccount", new {id = account.AccountNumber}) |
-                        @Html.ActionLink("Edit", "EditDebitAccount", new {id = account.AccountNumber})
+                        @Html.ActionLink("Edit", "EditDebitAccount", new {id = account.AccountNumber}) |
+                        @Html.ActionLink("Replish", "Repleish", new {id = account.AccountNumber}) |
+                        @Html.ActionLink("Withdraw", "Withdraw", new {id = account.AccountNumber}) |
+                        @Html.ActionLink("Payment", "Payment", new {id = account.AccountNumber}) |
                     </td>
                 </tr>
             }

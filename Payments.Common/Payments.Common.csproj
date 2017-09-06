@@ -40,6 +40,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Enums\TransactionStatus.cs" />
+    <Compile Include="Enums\TransactionType.cs" />
     <Compile Include="Enums\CreditCardType.cs" />
     <Compile Include="Enums\Currency.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

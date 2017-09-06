@@ -38,6 +38,7 @@ namespace Payments.WEB.Controllers
         public async Task<ActionResult> Login(LoginModel model)
         {
             await SetInitialDataAsync();
+
             if (ModelState.IsValid)
             {
                 UserDTO userDto = new UserDTO {Email = model.Email, Password = model.Password};
@@ -81,10 +82,11 @@ namespace Payments.WEB.Controllers
         public async Task<ActionResult> Register(RegisterModel model)
         {
             await SetInitialDataAsync();
-
+            
             if (ModelState.IsValid)
             {
                 UserDTO userDto = Mapper.Map<RegisterModel, UserDTO>(model);
+                userDto.Role = "user";
 
                 OperationDetails operationDetails = await UserService.Create(userDto);
                 if (operationDetails.Succedeed)
@@ -123,12 +125,52 @@ namespace Payments.WEB.Controllers
 
         private async Task SetInitialDataAsync()
         {
+            var userList = new List<UserDTO>
+            {
+                new UserDTO
+                {
+                    Email = "billmontana@gmail.com",
+                    FirstName = "Bill",
+                    SecondName = "Montana",
+                    Patronymic = "Bob",
+                    Birthday = new DateTime(1979, 11, 5),
+                    Role = "user",
+                    PhoneNumber = "380995572156",
+                    Password = "ad46D_ewr3",
+                    VAT = "5479183527"
+                },
+                new UserDTO
+                {
+                    Email = "nicktesla@gmail.com",
+                    FirstName = "Nick",
+                    SecondName = "Tesla",
+                    Patronymic = "Elon",
+                    Birthday = new DateTime(1959, 7, 25),
+                    Role = "user",
+                    PhoneNumber = "380997519634",
+                    Password = "ad46D_ewr3",
+                    VAT = "4103587036"
+                },
+                new UserDTO
+                {
+                    Email = "marinatrump@gmail.com",
+                    FirstName = "Marina",
+                    SecondName = "Trump",
+                    Patronymic = "Donald",
+                    Birthday = new DateTime(1995, 11, 19),
+                    Role = "user",
+                    PhoneNumber = "380687519633",
+                    Password = "ad46D_ewr3",
+                    VAT = "6300076592"
+                }
+            };
+
             await UserService.SetInitialData(new UserDTO()
             {
                 Email = "admin@admin.com",
                 Password = "ad46D_ewr3",
                 Role = "admin"
-            }, new List<string> {"admin", "employee", "user"}); 
+            }, userList, new List<string> {"admin", "employee", "user"}); 
         }
     }
 }

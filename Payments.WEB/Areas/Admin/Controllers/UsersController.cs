@@ -249,7 +249,7 @@ namespace Payments.WEB.Areas.Admin.Controllers
             }
             catch
             {
-                TempData["Message"] = "Account " + id + " has binded card / operation / delete request  and shouldn't be deleted";
+                TempData["Message"] = "Account " + id + " has binded cards / operations / delete requests and shouldn't be deleted";
             }
 
             if (TempData["UserId"] != null)

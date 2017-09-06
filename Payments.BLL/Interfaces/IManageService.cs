@@ -25,5 +25,8 @@ namespace Payments.BLL.Interfaces
         bool IsCardExist(string number);
         IEnumerable<CardDto> GetCardsByProfile(string id);
         void DeleteCard(string number);
+
+        // operations refer to transaction
+        void Repleish(int? accountNumber, decimal addmission);
     }
 }

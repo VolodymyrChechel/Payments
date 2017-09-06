@@ -166,5 +166,25 @@ namespace Payments.BLL.Services
             Database.Save();
         }
 
+        public void Repleish(int? accountNumber, decimal addmission)
+        {
+            var account = Database.Accounts.Get(accountNumber);
+
+            if(account == null)
+                throw new ValidationException("Account is not found", "");
+
+            var transaction = new Transaction
+            {
+                TransactionStatus = TransactionStatus.Prepared,
+                TransactionType = TransactionType.Repleish,
+                TransactionSum = addmission
+            };
+            
+            Database.Transactions.Create(transaction);
+            account.Transactions.Add(transaction);
+            Database.Save();
+        }
+
+
     }
 }
