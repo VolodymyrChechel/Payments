@@ -20,6 +20,7 @@ namespace Payments.BLL.Interfaces
         DebitAccountDTO GetDebitAccount(int? id);
         void UpdateDebitAccount(DebitAccountDTO debitAccount);
         void DeleteAccount(int? id);
+        string GetAccountProfileId(int? id);
         
         // cards methods
         void CreateCard(CardDto card);

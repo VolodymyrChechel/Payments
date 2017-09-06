@@ -198,8 +198,7 @@ namespace Payments.WEB.Areas.Admin.Controllers
 
             return View();
         }
-
-
+        
         [HttpGet]
         public ActionResult DeleteAccount(int? id)
         {
@@ -386,17 +385,6 @@ namespace Payments.WEB.Areas.Admin.Controllers
             {
                 AccountAccountNumber = account.AccountNumber
             };
-            /*
-            var items = new List<SelectListItem>();
-            foreach (var account in accounts)
-                items.Add(new SelectListItem
-                {
-                    Selected = false,
-                    Text = "Account id: " + account.AccountNumber + ", sum on the account: " + account.Sum + ", currency: " + account.Currency,
-                    Value = account.AccountNumber.ToString()
-                });
-
-            ViewBag.DropDownListItems = items;*/
 
             return View(payment);
         }
@@ -408,8 +396,15 @@ namespace Payments.WEB.Areas.Admin.Controllers
             if(ModelState.IsValid)
             {
                 var paymentDto = Mapper.Map<PaymentViewModel, PaymentDTO>(payment);
-
-                service.Payment(paymentDto);
+                try
+                {
+                    service.Payment(paymentDto);
+                }
+                catch (ValidationException e)
+                {
+                    ModelState.AddModelError(e.Property, e.Message);
+                    return View(payment);
+                }
 
                 TempData["Message"] = "Payment account " + payment.AccountAccountNumber + " was sent to processing";
 
@@ -419,6 +414,77 @@ namespace Payments.WEB.Areas.Admin.Controllers
                 return RedirectToAction("List");
             }
 
+            return View(payment);
+        }
+
+        // create payment without certain account
+        [HttpGet]
+        public ActionResult CreatePayment(string id)
+        {
+            var accounts = service.GetDebitAccountsByProfile(id);
+
+            if (accounts == null)
+            {
+                TempData["Message"] = "This user has no accounts";
+
+                return RedirectToAction("Show", new { id = TempData["UserId"] });
+            }
+
+            var items = new List<SelectListItem>();
+            foreach (var account in accounts)
+                items.Add(new SelectListItem
+                {
+                    Selected = false,
+                    Text = "Account id: " + account.AccountNumber + ", sum on the account: " + account.Sum + ", currency: " + account.Currency,
+                    Value = account.AccountNumber.ToString()
+                });
+
+            ViewBag.DropDownListItems = items;
+
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult CreatePayment(PaymentViewModel payment)
+
+        {
+            ModelState.Remove("Id");
+
+            if (ModelState.IsValid)
+            {
+                var paymentDto = Mapper.Map<PaymentViewModel, PaymentDTO>(payment);
+                try
+                {
+                    service.Payment(paymentDto);
+
+                    TempData["Message"] = "Payment account " + payment.AccountAccountNumber + " was sent to processing";
+
+                    if (TempData["UserId"] != null)
+                        return RedirectToAction("Show", new { id = TempData["UserId"] });
+
+                    return RedirectToAction("List");
+                }
+                catch (ValidationException e)
+                {
+                    ModelState.AddModelError(e.Property, e.Message);
+                }
+            }
+
+            // create data for drop-down list
+            var profileId = service.GetAccountProfileId(payment.AccountAccountNumber);
+            ViewData["UserId"] = profileId;
+            var accounts = service.GetDebitAccountsByProfile(profileId);
+            var items = new List<SelectListItem>();
+            foreach (var account in accounts)
+                items.Add(new SelectListItem
+                {
+                    Selected = false,
+                    Text = "Account id: " + account.AccountNumber + ", sum on the account: " + account.Sum + ", currency: " + account.Currency,
+                    Value = account.AccountNumber.ToString()
+                });
+            ViewBag.DropDownListItems = items;
+            
             return View(payment);
         }
 

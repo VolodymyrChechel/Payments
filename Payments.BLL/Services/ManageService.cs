@@ -86,6 +86,11 @@ namespace Payments.BLL.Services
             Database.Save();
         }
 
+        public string GetAccountProfileId(int? id)
+        {
+            var profileId = Database.Accounts.Get(id).ClientProfile.Id;
+            return profileId;
+        }
 
         public bool IsAccountExist(int? accountId)
         {
@@ -230,7 +235,7 @@ namespace Payments.BLL.Services
             if (finiteSum< 0)
                 throw new ValidationException("Sum of payment cannot be much than " + account.Sum, "Sum");
 
-            payment.PaymentStatus = PaymentStatus.Sent;
+            payment.PaymentStatus = PaymentStatus.Prepared;
             payment.Account = account;
 
             Database.Payments.Create(payment);

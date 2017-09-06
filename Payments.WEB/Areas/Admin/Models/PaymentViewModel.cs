@@ -20,8 +20,7 @@ namespace Payments.WEB.Areas.Admin.Models
         [RegularExpression(RegExStrings.SumNumber, ErrorMessage = "Sum is not correct")]
         [Required]
         public decimal PaymentSum { get; set; }
-
-        [Required]
+        
         public PaymentType PaymentType { get; set; }
         
         public PaymentStatus PaymentStatus { get; set; }

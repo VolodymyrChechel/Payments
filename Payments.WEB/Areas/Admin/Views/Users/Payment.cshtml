@@ -10,11 +10,12 @@
 {
     @Html.AntiForgeryToken()
 
-    @Html.HiddenFor(model => model.AccountAccountNumber)
-
     <div class="text-danger">
         @Html.ValidationSummary(false)
     </div>
+
+    @Html.HiddenFor(model => model.AccountAccountNumber)
+    @Html.HiddenFor(model => model.Id)
 
     <div class="form-group">
         @Html.LabelFor(model => model.AccountAccountNumber, new { @class = "col-md-2 control-label" })
