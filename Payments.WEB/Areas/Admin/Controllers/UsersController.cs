@@ -492,7 +492,9 @@ namespace Payments.WEB.Areas.Admin.Controllers
         {
             try
             {
-                var listDto = service.GetPaymentsByProfile(id);
+                string sortType = this.Request.QueryString["Order"];
+
+                var listDto = service.GetPaymentsByProfile(id, sortType);
 
                 var list = Mapper.Map<IEnumerable<PaymentDTO>, IEnumerable<PaymentViewModel>>(listDto);
 

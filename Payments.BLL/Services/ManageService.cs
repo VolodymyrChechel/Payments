@@ -242,17 +242,33 @@ namespace Payments.BLL.Services
             Database.Save();
         }
 
-    public IEnumerable<PaymentDTO> GetPaymentsByProfile(string id)
+        public IEnumerable<PaymentDTO> GetPaymentsByProfile(string id, string sortType)
         {
-            if(id == null)
+            if (id == null)
                 throw new ValidationException("Cannot find user", "");
 
             var paymentsList = Database.Accounts.
                 Find(account => account.ClientProfile.Id == id).
-                SelectMany(acc => acc.Payments).ToList();
+                SelectMany(acc => acc.Payments);
 
-            var paymentsDtoList = Mapper.Map<List<Payment>, List<PaymentDTO>>(paymentsList);
+            if(sortType != null)
+                switch (sortType)
+                {
+                    case "NUM_DESC":
+                        paymentsList = paymentsList.OrderByDescending(p => p.Id);
+                        break;
+                    case "NUM_ASC":
+                        paymentsList = paymentsList.OrderBy(p => p.Id);
+                        break;
+                    case "DATE_DESC":
+                        paymentsList = paymentsList.OrderByDescending(p => p.PaymentDate);
+                        break;
+                    case "DATE_ASC":
+                        paymentsList = paymentsList.OrderBy(p => p.PaymentDate);
+                        break;
+                }
 
+            var paymentsDtoList = Mapper.Map<List<Payment>, List<PaymentDTO>>(paymentsList.ToList());
             return paymentsDtoList;
         }
     }

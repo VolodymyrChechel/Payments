@@ -33,7 +33,7 @@ namespace Payments.BLL.Interfaces
         void Withdraw(PaymentDTO payment);
         void Payment(PaymentDTO payment);
 
-        IEnumerable<PaymentDTO> GetPaymentsByProfile(string id);
+        IEnumerable<PaymentDTO> GetPaymentsByProfile(string id, string sortType);
 
 
     }

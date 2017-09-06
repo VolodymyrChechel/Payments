@@ -12,7 +12,9 @@
 
 <div class="well">
     <p><strong> List of debit accounts</strong></p>
-    @Html.Action("Accounts", new { id = @Model.Id })
+    <div>
+        @Html.Action("Accounts", new { id = @Model.Id })
+    </div>
     @Html.ActionLink("Create new debit account", "CreateDebitAccount", new { id = Model.Id })
 </div>
 
@@ -23,7 +25,37 @@
 </div>
 
 <div class="well">
-    <p><strong>List of payments</strong></p>
-    @Html.Action("PaymentsList", new { id = Model.Id })
+    <strong>List of payments</strong>
+    
+    <select id="paymentsOrderChange">
+        <option value="NUM_ASC">Sort ascending by number</option>
+        <option value="NUM_DESC">Sort descending by number</option>
+        <option value="DATE_ASC">Sort ascending by date</option>
+        <option value="DATE_DESC">Sort descending by date</option>
+    </select>
+
+    <div id="paymentsList">
+        @Html.Action("PaymentsList", new { id = Model.Id })
+    </div>
     @Html.ActionLink("Create a payment", "CreatePayment", new { id = Model.Id })
 </div>
+
+<script>
+    document.getElementById("paymentsOrderChange").addEventListener("focusout", changeOrderPayment);
+
+    function changeOrderPayment() {
+        var e = document.getElementById("paymentsOrderChange");
+        var option = e.options[e.selectedIndex].value;
+        $('#paymentsList').load('@Url.Action("PaymentsList", "Users")/@Model.Id?Order=' + option);
+    }
+
+    @*$(document).(function () {
+        $('#paymentsOrderChange').click(function (e) {
+            alert("Wow");
+            e.preventDefault();
+            //var name = $('#search').val();
+            //name=encodeURIComponent(name);
+            $('#payments-list').load('@Url.Action("PaymentsList", "Users")?order=' + 'desc');
+        });
+    });*@
+</script>
