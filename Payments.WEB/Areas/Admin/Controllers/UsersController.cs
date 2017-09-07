@@ -127,6 +127,7 @@ namespace Payments.WEB.Areas.Admin.Controllers
             return View();
         }
 
+        // get list of card by user id
         [HttpGet]
         public ActionResult CardsList(string id)
         {
@@ -146,6 +147,7 @@ namespace Payments.WEB.Areas.Admin.Controllers
                 return RedirectToAction("List");
         }
 
+        // create new debit card
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult CreateDebitCard(CardViewModel card)
