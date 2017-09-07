@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Enums\UnblockRequestStatus.cs" />
     <Compile Include="Enums\PaymentStatus.cs" />
     <Compile Include="Enums\PaymentType.cs" />
     <Compile Include="Enums\CreditCardType.cs" />

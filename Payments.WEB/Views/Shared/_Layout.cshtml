@@ -22,16 +22,18 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Accounts", "Accounts")</li>
-                    <li>@Html.ActionLink("Cards", "Cards")</li>
-                    <li>@Html.ActionLink("Payments", "Payments")</li>
+                    <li>@Html.ActionLink("Accounts", "Index", "Accounts")</li>
+                    <li>@Html.ActionLink("Cards", "Index", "Cards")</li>
+                    <li>@Html.ActionLink("Payments", "Index", "Payments")</li>
                 </ul>
                 @Html.Partial("_LoginPartial")
             </div>
         </div>
     </div>
+    
+    <p class="text-danger"> @ViewBag.Message </p>
 
-    <div class="container body-content">
+<div class="container body-content">
         @RenderBody()
         <hr />
         <footer>

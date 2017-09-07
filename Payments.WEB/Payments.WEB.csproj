@@ -289,10 +289,12 @@
     <Compile Include="Areas\Admin\Models\CardViewModel.cs" />
     <Compile Include="Areas\Admin\Models\PaymentViewModel.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\AccountsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\DebitAccountViewModel.cs" />
     <Compile Include="Models\RegisterModel.cs" />
     <Compile Include="Models\LoginModel.cs" />
     <Compile Include="Models\ShowUserModel.cs" />
@@ -313,6 +315,7 @@
     <Content Include="Views\Account\Register.cshtml" />
     <Content Include="Views\Account\SuccessRegister.cshtml" />
     <Content Include="Views\Shared\_LayoutUnauth.cshtml" />
+    <Content Include="Views\Accounts\Index.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
