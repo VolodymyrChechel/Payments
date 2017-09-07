@@ -17,6 +17,7 @@ using Payments.WEB.Util;
 
 namespace Payments.WEB.Areas.Admin.Controllers
 {
+    [Authorize(Roles="admin")]
     // admin controller to manage users
     public class UsersController : Controller
     {
@@ -57,12 +58,14 @@ namespace Payments.WEB.Areas.Admin.Controllers
             return View(user);
         }
 
-        [ChildActionOnly]
+        //[ChildActionOnly]
         public ActionResult Accounts(string id)
         {
             if (id != null)
             {
-                var accounts = service.GetDebitAccountsByProfile(id);
+                string sortType = this.Request.QueryString["Order"];
+
+                var accounts = service.GetDebitAccountsByProfile(id, sortType: sortType);
                 var accountsViewList = Mapper.Map<IEnumerable<DebitAccountDTO>, IEnumerable<DebitAccountViewModel>>(accounts);
 
                 return View(accountsViewList);
@@ -458,7 +461,7 @@ namespace Payments.WEB.Areas.Admin.Controllers
                 {
                     service.Payment(paymentDto);
 
-                    TempData["Message"] = "Payment account " + payment.AccountAccountNumber + " was sent to processing";
+                    TempData["Message"] = "Payment from account " + payment.AccountAccountNumber + " was sent to processing";
 
                     if (TempData["UserId"] != null)
                         return RedirectToAction("Show", new { id = TempData["UserId"] });

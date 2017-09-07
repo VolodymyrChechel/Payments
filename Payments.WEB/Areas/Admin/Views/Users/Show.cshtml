@@ -8,31 +8,52 @@
 <h2>Information about user</h2>
 <p class="text-danger"> @ViewBag.Message </p>
 
-<p class="text-info"> @Model.FirstName @Model.SecondName | @Model.Email | @Model.VAT </p>
+<h4 class="text-info"> @Model.FirstName @Model.SecondName | @Model.Email | @Model.VAT </h4>
 
 <div class="well">
-    <p><strong> List of debit accounts</strong></p>
-    <div>
+    <h4 class="col-md-7">List of debit accounts</h4>
+    
+    <div class="form-group col-md-5">
+        <label for="paymentsOrderChange" class=" col-md-3 control-label"> Select ordering </label>
+        <div class="col-md-9">
+            <select class="form-control" id="accountsOrderChange">
+                <option value="NUM_ASC">Sort ascending by number</option>
+                <option value="NUM_DESC">Sort descending by number</option>
+                <option value="NAME_ASC">Sort ascending by name</option>
+                <option value="NAME_DESC">Sort descending by name</option>
+                <option value="SUM_DESC">Sort descending by sum</option>
+                <option value="SUM_ASC">Sort ascending by sum</option>
+            </select>
+        </div>
+    </div>
+
+    <div id="accountsList">
         @Html.Action("Accounts", new { id = @Model.Id })
     </div>
+    
     @Html.ActionLink("Create new debit account", "CreateDebitAccount", new { id = Model.Id })
 </div>
 
 <div class="well">
-    <p><strong>List of cards</strong></p>
+    <h4>List of cards</h4>
     @Html.Action("CardsList", new { id = Model.Id })
     @Html.ActionLink("Create new debit card", "CreateDebitCard", new { id = Model.Id })
 </div>
 
 <div class="well">
-    <strong>List of payments</strong>
-    
-    <select id="paymentsOrderChange">
-        <option value="NUM_ASC">Sort ascending by number</option>
-        <option value="NUM_DESC">Sort descending by number</option>
-        <option value="DATE_ASC">Sort ascending by date</option>
-        <option value="DATE_DESC">Sort descending by date</option>
-    </select>
+    <h4 class="col-md-7">List of payments</h4>
+
+    <div class="form-group col-md-5">
+        <label for="paymentsOrderChange" class=" col-md-3 control-label"> Select ordering </label>
+        <div class="col-md-9">
+            <select class="form-control" id="paymentsOrderChange">
+                <option value="NUM_ASC">Sort ascending by number</option>
+                <option value="NUM_DESC">Sort descending by number</option>
+                <option value="DATE_ASC">Sort ascending by date</option>
+                <option value="DATE_DESC">Sort descending by date</option>
+            </select>
+        </div>
+    </div>
 
     <div id="paymentsList">
         @Html.Action("PaymentsList", new { id = Model.Id })
@@ -41,7 +62,8 @@
 </div>
 
 <script>
-    document.getElementById("paymentsOrderChange").addEventListener("focusout", changeOrderPayment);
+    document.getElementById("paymentsOrderChange").addEventListener("change", changeOrderPayment);
+    document.getElementById("accountsOrderChange").addEventListener("change", changeOrderAccount);
 
     function changeOrderPayment() {
         var e = document.getElementById("paymentsOrderChange");
@@ -49,13 +71,9 @@
         $('#paymentsList').load('@Url.Action("PaymentsList", "Users")/@Model.Id?Order=' + option);
     }
 
-    @*$(document).(function () {
-        $('#paymentsOrderChange').click(function (e) {
-            alert("Wow");
-            e.preventDefault();
-            //var name = $('#search').val();
-            //name=encodeURIComponent(name);
-            $('#payments-list').load('@Url.Action("PaymentsList", "Users")?order=' + 'desc');
-        });
-    });*@
+    function changeOrderAccount() {
+        var e = document.getElementById("accountsOrderChange");
+        var option = e.options[e.selectedIndex].value;
+        $('#accountsList').load('@Url.Action("Accounts", "Users")/@Model.Id?Order=' + option);
+    }
 </script>

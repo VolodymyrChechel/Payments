@@ -39,14 +39,37 @@ namespace Payments.BLL.Services
             return Mapper.Map<ClientProfile, UserInfoDTO>(client);
         }
 
-        public IEnumerable<DebitAccountDTO> GetDebitAccountsByProfile(string profileId, bool withoutCard = false)
+        public IEnumerable<DebitAccountDTO> GetDebitAccountsByProfile(string profileId, bool withoutCard = false, string sortType = null)
         {
-            var accountsList = Database.DebitAccounts.Find(debAcc => debAcc.ClientProfileId == profileId).Include(debAcc => debAcc.Cards).ToList();
-
-            if (withoutCard)
-                accountsList = accountsList.Where(debAcc => debAcc.Cards.Count == 0).ToList();
+            var accountsList = Database.DebitAccounts.Find(debAcc => debAcc.ClientProfileId == profileId).Include(debAcc => debAcc.Cards);
             
-            var accountsDtoList = Mapper.Map<IEnumerable<DebitAccount>, IEnumerable<DebitAccountDTO>>(accountsList);
+            if (sortType != null)
+                switch (sortType)
+                {
+                    case "NUM_DESC":
+                        accountsList = accountsList.OrderByDescending(acc => acc.AccountNumber);
+                        break;
+                    case "NUM_ASC":
+                        accountsList = accountsList.OrderBy(acc => acc.AccountNumber);
+                        break;
+                    case "NAME_DESC":
+                        accountsList = accountsList.OrderByDescending(acc => acc.Name);
+                        break;
+                    case "NAME_ASC":
+                        accountsList = accountsList.OrderBy(acc => acc.Name);
+                        break;
+                    case "SUM_DESC":
+                        accountsList = accountsList.OrderByDescending(acc => acc.Sum);
+                        break;
+                    case "SUM_ASC":
+                        accountsList = accountsList.OrderBy(acc => acc.Sum);
+                        break;
+                }
+            
+            if (withoutCard)
+                accountsList = accountsList.Where(acc => acc.Cards.Count == 0);
+
+            var accountsDtoList = Mapper.Map<IEnumerable<DebitAccount>, IEnumerable<DebitAccountDTO>>(accountsList.ToList());
 
             return accountsDtoList;
         }

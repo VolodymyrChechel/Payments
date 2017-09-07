@@ -14,7 +14,7 @@ namespace Payments.BLL.Interfaces
         UserInfoDTO GetProfile(string id);
 
         // accounts methods
-        IEnumerable<DebitAccountDTO> GetDebitAccountsByProfile(string id, bool withoutCard = false);
+        IEnumerable<DebitAccountDTO> GetDebitAccountsByProfile(string id, bool withoutCard = false, string sortType = null);
         void CreateDebitAccount(DebitAccountDTO debitAccount);
         bool IsAccountExist(int? id);
         DebitAccountDTO GetDebitAccount(int? id);
