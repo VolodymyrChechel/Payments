@@ -25,7 +25,7 @@ namespace Payments.DAL.Repositories
 
         public Payment Get(object id)
         {
-            return db.Payments.Find(id);
+            return db.Payments.Find(Convert.ToInt32(id));
         }
 
         public IQueryable<Payment> Find(Func<Payment, bool> predicate)

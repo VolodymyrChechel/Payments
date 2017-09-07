@@ -101,7 +101,39 @@ namespace Payments.WEB.Areas.Admin.Controllers
 
             return View();
         }
-        
+
+        public ActionResult BlockUser(string id)
+        {
+            try
+            {
+                service.BlockUser(id);
+
+                TempData["Message"] = "User " + id + " was successfully blocked";
+            }
+            catch
+            {
+                TempData["Message"] = "There was a proflem with blocking a user";
+            }
+
+            return RedirectToAction("Show", new {id = id});
+        }
+
+        public ActionResult UnblockUser(string id)
+        {
+            try
+            {
+                service.UnblockUser(id);
+
+                TempData["Message"] = "User " + id + " was successfully unblocked";
+            }
+            catch
+            {
+                TempData["Message"] = "There was a proflem with unblocking a user";
+            }
+
+            return RedirectToAction("Show", new { id = id });
+        }
+
         // create credit card
         // payments
         [HttpGet]
@@ -411,7 +443,7 @@ namespace Payments.WEB.Areas.Admin.Controllers
                     return View(payment);
                 }
 
-                TempData["Message"] = "Payment account " + payment.AccountAccountNumber + " was sent to processing";
+                TempData["Message"] = "Payment with account " + payment.AccountAccountNumber + " was sent to processing";
 
                 if (TempData["UserId"] != null)
                     return RedirectToAction("Show", new { id = TempData["UserId"] });
@@ -516,8 +548,22 @@ namespace Payments.WEB.Areas.Admin.Controllers
             return RedirectToAction("List");
         }
 
-        
+        public ActionResult ConfirmPayment(string id)
+        {
+            try
+            {
+                service.ConfirmPayment(id);
+                TempData["Message"] = "Payment id" + id + " was successfully executed";
+            }
+            catch (ValidationException e)
+            {
+                TempData["Message"] = e.Message;
+            }
 
-        //public ActionResult ConfirmPayment()
+            if (TempData["UserId"] != null)
+                return RedirectToAction("Show", new { id = TempData["UserId"] });
+
+            return RedirectToAction("List");
+        }
     }
 }

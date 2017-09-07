@@ -8,7 +8,18 @@
 <h2>Information about user</h2>
 <p class="text-danger"> @ViewBag.Message </p>
 
-<h4 class="text-info"> @Model.FirstName @Model.SecondName | @Model.Email | @Model.VAT </h4>
+<h4 class="text-info"> @Model.FirstName @Model.SecondName | @Model.Email | @Model.VAT | 
+    @if (Model.IsBlocked)
+    {
+        @:Blocked client
+        @Html.ActionLink("Unblock client", "UnblockUser", new { id = Model.Id}, new { @class = "btn btn-danger btn-sm" })
+    }
+    else
+    {
+        @:Unblocked client
+        @Html.ActionLink("Block client", "BlockUser", new { id = Model.Id }, new { @class = "btn btn-danger btn-sm" })
+    }
+</h4>
 
 <div class="well">
     <h4 class="col-md-7">List of debit accounts</h4>

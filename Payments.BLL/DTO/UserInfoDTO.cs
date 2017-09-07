@@ -14,5 +14,6 @@ namespace Payments.BLL.DTO
         public DateTime Birthday { get; set; }
         public string PhoneNumber { get; set; }
         public string VAT { get; set; }
+        public bool IsBlocked { get; set; }
     }
 }

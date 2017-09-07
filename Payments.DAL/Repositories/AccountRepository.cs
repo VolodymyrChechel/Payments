@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Data.Entity;
 using System.Linq;
@@ -44,10 +45,14 @@ namespace Payments.DAL.Repositories
 
         public void Delete(object id)
         {
-            Account acc = db.Accounts.Find(id);
+            var account = db.Accounts.Find(id);
 
-            if (acc != null)
-                db.Accounts.Remove(acc);
+            if (account != null)
+                if (account.Cards.Any() || account.Payments.Any() ||
+                    account.UnblockAccountRequests.Any())
+                    throw new Exception("Account has related data");
+            
+            db.Accounts.Remove(account);
         }
         
     }

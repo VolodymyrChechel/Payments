@@ -10,7 +10,8 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th class="col-md-1">Payment numer</th>
+                    <th class="col-md-1">Payment number</th>
+                    <th class="col-md-1">Account number</th>
                     <th>Payment's date</th>
                     <th>Sum</th>
                     <th>Type</th>
@@ -24,6 +25,7 @@
                 {
                     <tr>
                         <td> @payment.Id </td>
+                        <td> @payment.AccountAccountNumber </td>
                         <td> @payment.PaymentDate</td>
                         <td> @payment.PaymentSum </td>
                         <td> @payment.PaymentType </td>

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using AutoMapper;
 using Microsoft.AspNet.Identity;
@@ -37,6 +38,22 @@ namespace Payments.BLL.Services
             var client = Database.ClientManager.Get(id);
 
             return Mapper.Map<ClientProfile, UserInfoDTO>(client);
+        }
+
+        public void BlockUser(string id)
+        {
+            var client = Database.ClientManager.Get(id);
+            client.IsBlocked = true;
+            Database.ClientManager.Update(client);
+            Database.Save();
+        }
+
+        public void UnblockUser(string id)
+        {
+            var client = Database.ClientManager.Get(id);
+            client.IsBlocked = false;
+            Database.ClientManager.Update(client);
+            Database.Save();
         }
 
         public IEnumerable<DebitAccountDTO> GetDebitAccountsByProfile(string profileId, bool withoutCard = false, string sortType = null)
@@ -293,6 +310,47 @@ namespace Payments.BLL.Services
 
             var paymentsDtoList = Mapper.Map<List<Payment>, List<PaymentDTO>>(paymentsList.ToList());
             return paymentsDtoList;
+        }
+
+        public void ConfirmPayment(string id)
+        {
+            if(id == null)
+                throw new ValidationException("Id was not set, cannot find paymnet", "Id");
+
+            var payment = Database.Payments.Get(id);
+
+            if(payment == null)
+                throw new ValidationException("A payment with id" + id + " was not fount", "");
+
+            var account = Database.Accounts.Get(payment.AccountAccountNumber);
+
+            if (account == null)
+                throw new ValidationException("An account with id" +
+                    payment.AccountAccountNumber + " was not fount", "");
+
+            payment.PaymentDate = DateTime.UtcNow;
+            if (account.IsBlocked)
+            {
+                payment.PaymentStatus = PaymentStatus.Rejected;
+                payment.Comment += "/rRejected: account is blocked/r";
+                Database.Save();
+                throw new ValidationException("Account blocked", "");
+            }
+            
+            var finiteSum = account.Sum - payment.PaymentSum;
+            if (finiteSum < 0)
+            {
+                payment.PaymentStatus = PaymentStatus.Rejected;
+                payment.Comment += "/rRejected: no money on an account/r";
+                Database.Save();
+                throw new ValidationException("Account has no enough money", "");
+            }
+
+            payment.PaymentStatus = PaymentStatus.Sent;
+            payment.Comment += "/rPayment was sent/r";
+            account.Sum = finiteSum;
+
+            Database.Save();
         }
     }
 }

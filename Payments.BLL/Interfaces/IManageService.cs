@@ -9,9 +9,11 @@ namespace Payments.BLL.Interfaces
     // this service is used by admin to manage user and their accounts
     public interface IManageService
     {
-        // users methods
+        // profiles methods
         IEnumerable<UserInfoDTO> GetProfiles();
         UserInfoDTO GetProfile(string id);
+        void BlockUser(string id);
+        void UnblockUser(string id);
 
         // accounts methods
         IEnumerable<DebitAccountDTO> GetDebitAccountsByProfile(string id, bool withoutCard = false, string sortType = null);
@@ -32,9 +34,8 @@ namespace Payments.BLL.Interfaces
         void Replenish(PaymentDTO payment);
         void Withdraw(PaymentDTO payment);
         void Payment(PaymentDTO payment);
-
         IEnumerable<PaymentDTO> GetPaymentsByProfile(string id, string sortType);
-
+        void ConfirmPayment(string id);
 
     }
 }

@@ -28,6 +28,7 @@ namespace Payments.WEB.Areas.Admin.Models
         public DateTime PaymentDate { get; set; }
 
         [Required]
+        [RegularExpression(RegExStrings.Recipient, ErrorMessage = "Recipient has no correct")]
         public string Recipient { get; set; }
         public string Comment { get; set; }
 
