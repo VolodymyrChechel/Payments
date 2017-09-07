@@ -316,6 +316,7 @@
     <Content Include="Views\Account\SuccessRegister.cshtml" />
     <Content Include="Views\Shared\_LayoutUnauth.cshtml" />
     <Content Include="Views\Accounts\Index.cshtml" />
+    <Content Include="Views\Accounts\CreateDebitAccount.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

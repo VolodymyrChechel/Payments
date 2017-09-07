@@ -31,15 +31,14 @@
         </div>
     </div>
     
-    <p class="text-danger"> @ViewBag.Message </p>
-
 <div class="container body-content">
-        @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year | ++bank </p>
-        </footer>
-    </div>
+    <h4 class="text-danger"> @ViewBag.Message </h4>
+    @RenderBody()
+    <hr/>
+    <footer>
+        <p>&copy; @DateTime.Now.Year | ++bank </p>
+    </footer>
+</div>
 
     <script src="~/Scripts/jquery-3.1.1.min.js"></script>
     <script src="~/Scripts/jquery.validate.min.js"></script>

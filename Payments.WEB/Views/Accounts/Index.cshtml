@@ -6,56 +6,57 @@
 
 <h2>List of accounts</h2>
 
-@if (Model.Count() != 0)
+@if (Model != null && Model.Count() != 0)
 {
     <div class="clearfix">
         <table class="table">
             <thead>
-                <tr>
-                    <th class="col-md-1">Account number</th>
-                    <th>Name</th>
-                    <th>Sum on account</th>
-                    <th>Currency</th>
-                    <th>Status</th>
-                    <th></th>
-                </tr>
+            <tr>
+                <th class="col-md-1">Account number</th>
+                <th>Name</th>
+                <th>Sum on account</th>
+                <th>Currency</th>
+                <th>Status</th>
+                <th></th>
+            </tr>
             </thead>
             <tbody>
-                @foreach (var account in Model)
-                {
-                    <tr>
-                        <td> @account.AccountNumber </td>
-                        <td> @account.Name </td>
-                        <td> @account.Sum </td>
-                        <td> @account.Currency </td>
-                        <td>
-                            @if (account.IsBlocked)
-                            {
-                                @:Blocked
+            @foreach (var account in Model)
+            {
+                <tr>
+                    <td> @account.AccountNumber </td>
+                    <td> @account.Name </td>
+                    <td> @account.Sum </td>
+                    <td> @account.Currency </td>
+                    <td>
+                        @if (account.IsBlocked)
+                        {
+                            @:Blocked
                         }
-                            else
-                            {
-                                @:Unblocked
+                        else
+                        {
+                            @:Unblocked
                         }
-                        </td>
-                        <td>
-                            @Html.ActionLink("Edit", "EditDebitAccount", new { id = account.AccountNumber }) |
-                            @Html.ActionLink("Replenish", "Replenish", new { id = account.AccountNumber }) |
-                            @Html.ActionLink("Withdraw", "Withdraw", new { id = account.AccountNumber }) |
-                            @Html.ActionLink("Payment", "Payment", new { id = account.AccountNumber }) |
-                            @if (account.IsBlocked)
-                            {
-                                @Html.ActionLink("Send a request to unblock", "UnblockAccountRequest", new {id = account.AccountNumber})
-                            }
-                            else
-                            {
-                                @Html.ActionLink("Block the account", "BlockAccount", new { id = account.AccountNumber })
-                            }
-                        </td>
-                    </tr>
-                }
+                    </td>
+                    <td>
+                        @Html.ActionLink("Change name", "ChangeNameAccount", new { id = account.AccountNumber }) |
+                        @Html.ActionLink("Replenish", "Replenish", new { id = account.AccountNumber }) |
+                        @Html.ActionLink("Withdraw", "Withdraw", new { id = account.AccountNumber }) |
+                        @Html.ActionLink("Payment", "Payment", new { id = account.AccountNumber }) |
+                        @if (account.IsBlocked)
+                        {
+                            @Html.ActionLink("Send a request to unblock", "UnblockAccountRequest", new {id = account.AccountNumber})
+                        }
+                        else
+                        {
+                            @Html.ActionLink("Block the account", "BlockAccount", new { id = account.AccountNumber })
+                        }
+                    </td>
+                </tr>
+            }
             </tbody>
         </table>
+        @Html.ActionLink("Create a new account", "CreateDebitAccount", null, new {@class = "btn btn-success btn-sm"})
     </div>
 }
 else

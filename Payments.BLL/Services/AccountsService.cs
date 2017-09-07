@@ -28,11 +28,27 @@ namespace Payments.BLL.Services
             var accounts = Database.ClientManager.Get(id)?.Accounts.ToList();
 
             if(accounts == null)
-                throw new ValidationException("Account was not found", "");
+                throw new ValidationException("Accounts were not found", "");
 
             var accountsDto = Mapper.Map <IEnumerable<Account>, IEnumerable<DebitAccountDTO>>(accounts);
 
             return accountsDto;
+
+        }
+
+        public DebitAccountDTO GetAccount(string id)
+        {
+            if (id == null)
+                throw new ValidationException("Id was not passed", "");
+
+            var account = Database.Accounts.Get(id);
+
+            if (account == null)
+                throw new ValidationException("Account was not found", "");
+
+            var accountDto = Mapper.Map<Account, DebitAccountDTO>(account);
+
+            return accountDto;
         }
 
         public void BlockAccount(string id)
@@ -80,6 +96,17 @@ namespace Payments.BLL.Services
             };
             
             Database.UnblockAccountRequests.Create(unblockRequest);
+            Database.Save();
+        }
+
+        public void CreateDebitAccount(DebitAccountDTO accountDto)
+        {
+            if (accountDto == null)
+                throw new ValidationException("Account was not passed", "");
+
+            var account = Mapper.Map<DebitAccountDTO, DebitAccount>(accountDto);
+
+            Database.Accounts.Create(account);
             Database.Save();
         }
     }
