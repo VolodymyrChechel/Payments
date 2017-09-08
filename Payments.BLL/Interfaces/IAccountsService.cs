@@ -5,7 +5,7 @@ namespace Payments.BLL.Interfaces
 {
     public interface IAccountsService
     {
-        IEnumerable<DebitAccountDTO> GetAccountsByUserId(string id);
+        IEnumerable<DebitAccountDTO> GetAccountsByUserId(string id, string ordering = null);
         DebitAccountDTO GetAccount(string id);
         void BlockAccount(string id);
         void UnblockAccountRequest(string id);

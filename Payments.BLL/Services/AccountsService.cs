@@ -20,15 +20,38 @@ namespace Payments.BLL.Services
             Database = uow;
         }
 
-        public IEnumerable<DebitAccountDTO> GetAccountsByUserId(string id)
+        public IEnumerable<DebitAccountDTO> GetAccountsByUserId(string id, string ordering = null)
         {
             if (id == null)
                 throw new ValidationException("Id was not passed", "");
 
-            var accounts = Database.ClientManager.Get(id)?.Accounts.ToList();
-
+            var accounts = Database.ClientManager.Get(id)?.Accounts;
+            
             if (accounts == null)
                 throw new ValidationException("Accounts were not found", "");
+
+            if (ordering != null)
+                switch (ordering)
+                {
+                    case "NUM_DESC":
+                        accounts = accounts.OrderByDescending(acc => acc.AccountNumber).ToList();
+                        break;
+                    case "NUM_ASC":
+                        accounts = accounts.OrderBy(acc => acc.AccountNumber).ToList();
+                        break;
+                    case "NAME_DESC":
+                        accounts = accounts.OrderByDescending(acc => acc.Name).ToList();
+                        break;
+                    case "NAME_ASC":
+                        accounts = accounts.OrderBy(acc => acc.Name).ToList();
+                        break;
+                    case "SUM_DESC":
+                        accounts = accounts.OrderByDescending(acc => acc.Sum).ToList();
+                        break;
+                    case "SUM_ASC":
+                        accounts = accounts.OrderBy(acc => acc.Sum).ToList();
+                        break;
+                }
 
             var accountsDto = Mapper.Map<IEnumerable<Account>, IEnumerable<DebitAccountDTO>>(accounts);
 

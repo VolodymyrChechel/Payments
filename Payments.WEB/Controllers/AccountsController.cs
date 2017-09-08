@@ -20,17 +20,19 @@ namespace Payments.WEB.Controllers
             service = serv;
         }
 
-        public ActionResult Index()
+        public ActionResult Index(string sort)
         {
             var userId = User.Identity.GetUserId();
 
             try
             {
-                var accountsListDto = service.GetAccountsByUserId(userId);
+                var accountsListDto = service.GetAccountsByUserId(userId, sort);
                 var accountsList =
                     Mapper.Map<IEnumerable<DebitAccountDTO>, IEnumerable<DebitAccountViewModel>>(accountsListDto);
 
                 ViewBag.Message = TempData["Message"]?.ToString();
+                ViewBag.Selected = sort;
+                
                 return View(accountsList);
             }
             catch (ValidationException e)
