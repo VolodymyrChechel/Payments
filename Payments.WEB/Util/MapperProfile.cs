@@ -1,8 +1,7 @@
 ﻿using AutoMapper;
 using Payments.BLL.DTO;
-using Payments.WEB.Areas.Admin.Models;
-using Payments.WEB.Models;
-using DebitAccountViewModel = Payments.WEB.Models.DebitAccountViewModel;
+using ViewModels = Payments.WEB.Models;
+using AdminViewModels = Payments.WEB.Areas.Admin.Models;
 
 namespace Payments.WEB.Util
 {
@@ -10,14 +9,15 @@ namespace Payments.WEB.Util
     {
         public UserProfile()
         {
-            CreateMap<RegisterModel, UserDTO>();
-            CreateMap<DebitAccountDTO, Payments.WEB.Areas.Admin.Models.DebitAccountViewModel>();
-            CreateMap<Payments.WEB.Areas.Admin.Models.DebitAccountViewModel, DebitAccountDTO>();
-            CreateMap<CardViewModel, CardDto>();
-            CreateMap<PaymentViewModel, PaymentDTO>();
-            CreateMap<PaymentDTO, PaymentViewModel>();
-            CreateMap<DebitAccountDTO, DebitAccountViewModel>();
-            CreateMap<DebitAccountViewModel, DebitAccountDTO>();
+            CreateMap<ViewModels.RegisterModel, UserDTO>();
+            CreateMap<DebitAccountDTO, AdminViewModels.DebitAccountViewModel>();
+            CreateMap<AdminViewModels.DebitAccountViewModel, DebitAccountDTO>();
+            CreateMap<AdminViewModels.CardViewModel, CardDto>();
+            CreateMap<AdminViewModels.PaymentViewModel, PaymentDTO>();
+            CreateMap<PaymentDTO, AdminViewModels.PaymentViewModel>();
+            CreateMap<DebitAccountDTO, ViewModels.DebitAccountViewModel>();
+            CreateMap<ViewModels.DebitAccountViewModel, DebitAccountDTO>();
+            CreateMap<ViewModels.PaymentViewModel, PaymentDTO>();
             //CreateMap<UserDTO, UserInfoDTO>();
         }
     }

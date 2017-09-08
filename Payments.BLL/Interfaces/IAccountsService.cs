@@ -10,5 +10,11 @@ namespace Payments.BLL.Interfaces
         void BlockAccount(string id);
         void UnblockAccountRequest(string id);
         void CreateDebitAccount(DebitAccountDTO account);
+        void EditAccountName(DebitAccountDTO account);
+
+        void Replenish(PaymentDTO payment);
+        void Withdraw(PaymentDTO payment);
+        void Payment(PaymentDTO payment);
+        IEnumerable<PaymentDTO> GetPaymentsByProfile(string id, string sortType);
     }
 }

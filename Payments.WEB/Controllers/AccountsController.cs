@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Web.Mvc;
 using AutoMapper;
 using Microsoft.AspNet.Identity;
@@ -99,9 +100,199 @@ namespace Payments.WEB.Controllers
         [HttpGet]
         public ActionResult ChangeNameAccount(string id)
         {
+            try
+            {
+                var accountDto = service.GetAccount(id);
+
+                var account = Mapper.Map<DebitAccountDTO, DebitAccountViewModel>(accountDto);
+
+                return View(account);
+            }
+            catch (ValidationException e)
+            {
+                TempData["Message"] = e.Message;
+                return RedirectToAction("Index");
+            }
+        }
+
+        [HttpPost]
+        public ActionResult ChangeNameAccount(DebitAccountViewModel model)
+        {
+            if(ModelState["Name"].Errors.Count == 0)
+            {
+                var modelDto = Mapper.Map<DebitAccountViewModel, DebitAccountDTO>(model);
+                try
+                {
+                    service.EditAccountName(modelDto);
+                    TempData["Message"] = "Account's name was update";
+                }
+                catch (ValidationException e)
+                {
+                    TempData["Message"] = e.Message;
+                }
+                return RedirectToAction("Index");
+            }
             
-            return View();
+            return View(model);
         }
         
+        [HttpGet]
+        public ActionResult Replenish(string id)
+        {
+            try
+            {
+                var account = service.GetAccount(id);
+
+                if(account.ClientProfileId != User.Identity.GetUserId())
+                    throw new ValidationException("You cannot replenish this account", "");
+
+                var payment = new PaymentViewModel
+                {
+                    Recipient = account.AccountNumber.ToString()
+                };
+
+                return View(payment);
+            }
+            catch (ValidationException e)
+            {
+                TempData["Message"] = e.Message;
+            }
+            
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Replenish(PaymentViewModel payment)
+        {
+            if (ModelState.IsValid)
+            {
+                var paymentDto = Mapper.Map<PaymentViewModel, PaymentDTO>(payment);
+                try
+                {
+                    service.Replenish(paymentDto);
+                    TempData["Message"] = "Account " + payment.Recipient + " was successfully replenished";
+                }
+                catch (ValidationException e)
+                {
+                    TempData["Message"] = e.Message;
+                }
+
+                return RedirectToAction("Index");
+            }
+
+            return View(payment);
+        }
+
+        [HttpGet]
+        public ActionResult Withdraw(string id)
+        {
+            try
+            {
+                var account = service.GetAccount(id);
+
+                if (account.ClientProfileId != User.Identity.GetUserId())
+                    throw new ValidationException("You cannot withdaw from this account", "");
+
+                var payment = new PaymentViewModel
+                {
+                    Recipient = account.AccountNumber.ToString()
+                };
+
+                return View(payment);
+            }
+            catch (ValidationException e)
+            {
+                TempData["Message"] = e.Message;
+            }
+
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Withdraw(PaymentViewModel payment)
+        {
+            if (ModelState.IsValid)
+            {
+                var paymentDto = Mapper.Map<PaymentViewModel, PaymentDTO>(payment);
+
+                try
+                {
+                    service.Withdraw(paymentDto);
+
+                    TempData["Message"] = "Withdrawal from an account " + payment.Recipient + " was successfully";
+                }
+                catch (ValidationException e)
+                {
+                    ModelState.AddModelError(e.Property, e.Message);
+                    return View(payment);
+                }
+                catch (Exception e)
+                {
+                    TempData["Message"] = e.Message;
+                    return RedirectToAction("Index");
+                }
+            }
+
+            return View(payment);
+        }
+
+        // create payment with certain account
+        [HttpGet]
+        public ActionResult Payment(string id)
+        {
+            try
+            {
+                var account = service.GetAccount(id);
+
+                if (account.ClientProfileId != User.Identity.GetUserId())
+                {
+                    TempData["Message"] = "You cannot access to account \"" + id + "\"";
+
+                    return RedirectToAction("Index");
+                }
+
+                var payment = new PaymentViewModel
+                {
+                    AccountAccountNumber = account.AccountNumber
+                };
+
+                return View(payment);
+                }
+            catch (ValidationException e)
+            {
+                TempData["Message"] = e.Message;
+            }
+
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Payment(PaymentViewModel payment)
+        {
+            if (ModelState.IsValid)
+            {
+
+                var paymentDto = Mapper.Map<PaymentViewModel, PaymentDTO>(payment);
+
+                try
+                {
+                    service.Payment(paymentDto);
+                }
+                catch (ValidationException e)
+                {
+                    ModelState.AddModelError(e.Property, e.Message);
+                    return View(payment);
+                }
+
+                TempData["Message"] = "Payment with account " + payment.AccountAccountNumber + " was sent to processing";
+
+                return RedirectToAction("Index");
+            }
+
+            return View(payment);
+        }
     }
 }

@@ -295,6 +295,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\DebitAccountViewModel.cs" />
+    <Compile Include="Models\PaymentViewModel.cs" />
     <Compile Include="Models\RegisterModel.cs" />
     <Compile Include="Models\LoginModel.cs" />
     <Compile Include="Models\ShowUserModel.cs" />
@@ -317,6 +318,10 @@
     <Content Include="Views\Shared\_LayoutUnauth.cshtml" />
     <Content Include="Views\Accounts\Index.cshtml" />
     <Content Include="Views\Accounts\CreateDebitAccount.cshtml" />
+    <Content Include="Views\Accounts\ChangeNameAccount.cshtml" />
+    <Content Include="Views\Accounts\Replenish.cshtml" />
+    <Content Include="Views\Accounts\Payment.cshtml" />
+    <Content Include="Views\Accounts\Withdraw.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

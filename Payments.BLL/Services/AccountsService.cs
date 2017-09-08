@@ -22,15 +22,15 @@ namespace Payments.BLL.Services
 
         public IEnumerable<DebitAccountDTO> GetAccountsByUserId(string id)
         {
-            if(id == null)
+            if (id == null)
                 throw new ValidationException("Id was not passed", "");
 
             var accounts = Database.ClientManager.Get(id)?.Accounts.ToList();
 
-            if(accounts == null)
+            if (accounts == null)
                 throw new ValidationException("Accounts were not found", "");
 
-            var accountsDto = Mapper.Map <IEnumerable<Account>, IEnumerable<DebitAccountDTO>>(accounts);
+            var accountsDto = Mapper.Map<IEnumerable<Account>, IEnumerable<DebitAccountDTO>>(accounts);
 
             return accountsDto;
 
@@ -55,10 +55,10 @@ namespace Payments.BLL.Services
         {
             if (id == null)
                 throw new ValidationException("Id was not passed", "");
-            
+
             var account = Database.Accounts.Get(id);
 
-            if(account == null)
+            if (account == null)
                 throw new ValidationException("Account was not found", "");
             if (account.IsBlocked == true)
                 throw new ValidationException("Account is blocked already", "");
@@ -80,12 +80,11 @@ namespace Payments.BLL.Services
             if (account.IsBlocked == false)
                 throw new ValidationException("Account is unblocked", "");
 
-            var lastAccount = Database.UnblockAccountRequests.
-                Find(req => req.AccountAccountNumber == account.AccountNumber).
-                OrderByDescending(req => req.RequestTime).
-                FirstOrDefault();
+            var lastAccount = Database.UnblockAccountRequests
+                .Find(req => req.AccountAccountNumber == account.AccountNumber)
+                .OrderByDescending(req => req.RequestTime).FirstOrDefault();
 
-            if(lastAccount?.Status == UnblockRequestStatus.Prepared)
+            if (lastAccount?.Status == UnblockRequestStatus.Prepared)
                 throw new ValidationException("Last request was not considered", "");
 
             var unblockRequest = new UnblockAccountRequest
@@ -94,7 +93,7 @@ namespace Payments.BLL.Services
                 RequestTime = DateTime.UtcNow,
                 Status = UnblockRequestStatus.Prepared
             };
-            
+
             Database.UnblockAccountRequests.Create(unblockRequest);
             Database.Save();
         }
@@ -109,5 +108,124 @@ namespace Payments.BLL.Services
             Database.Accounts.Create(account);
             Database.Save();
         }
+
+        public void EditAccountName(DebitAccountDTO accountDto)
+        {
+            var account = Database.Accounts.Get(accountDto.AccountNumber);
+
+            account.Name = accountDto.Name;
+
+            Database.Accounts.Update(account);
+            Database.Save();
+        }
+
+        public void Replenish(PaymentDTO paymentDto)
+        {
+            if (paymentDto == null)
+                throw new ValidationException("Payment object is not passed", "");
+
+            var payment = Mapper.Map<PaymentDTO, Payment>(paymentDto);
+            payment.PaymentDate = DateTime.UtcNow;
+            payment.PaymentType = PaymentType.Replenish;
+
+            var account = Database.Accounts.Get(payment.Recipient);
+
+            if (account.IsBlocked)
+                throw new ValidationException("The account is blocked. Replenish is canceled", "");
+
+            account.Sum += payment.PaymentSum;
+            Database.Accounts.Update(account);
+
+            payment.PaymentStatus = PaymentStatus.Sent;
+            payment.Account = account;
+
+            Database.Payments.Create(payment);
+            Database.Save();
+        }
+
+        public void Withdraw(PaymentDTO paymentDto)
+        {
+            if (paymentDto == null)
+                throw new NullReferenceException("Payment object is not passed");
+
+            var payment = Mapper.Map<PaymentDTO, Payment>(paymentDto);
+            payment.PaymentDate = DateTime.UtcNow;
+            payment.PaymentType = PaymentType.Withdraw;
+
+            var account = Database.Accounts.Get(payment.Recipient);
+
+            if (account.IsBlocked)
+                throw new AccessException("The account is blocked. Withdrawal is canceled", "");
+
+            var finiteSum = account.Sum - payment.PaymentSum;
+
+            if (finiteSum < 0)
+                throw new ValidationException("Sum of withdrawal cannot be much than " + account.Sum, "Sum");
+
+            account.Sum = finiteSum;
+            Database.Accounts.Update(account);
+
+            payment.PaymentStatus = PaymentStatus.Sent;
+            payment.Account = account;
+
+            Database.Payments.Create(payment);
+            Database.Save();
+        }
+
+        public void Payment(PaymentDTO paymentDto)
+        {
+            if (paymentDto == null)
+                throw new ValidationException("Payment object is not passed", "");
+
+            var payment = Mapper.Map<PaymentDTO, Payment>(paymentDto);
+            payment.PaymentDate = DateTime.UtcNow;
+            payment.PaymentType = PaymentType.Payment;
+
+            var account = Database.Accounts.Get(payment.AccountAccountNumber);
+            if (account == null)
+                throw new ValidationException("Cannot find the account", "");
+
+            var finiteSum = account.Sum - payment.PaymentSum;
+
+            if (finiteSum < 0)
+                throw new ValidationException("Sum of payment cannot be much than " + account.Sum, "Sum");
+
+            payment.PaymentStatus = PaymentStatus.Prepared;
+            payment.Account = account;
+
+            Database.Payments.Create(payment);
+            Database.Save();
+        }
+
+        public IEnumerable<PaymentDTO> GetPaymentsByProfile(string id, string sortType)
+        {
+            if (id == null)
+                throw new ValidationException("Cannot find user", "");
+
+            var paymentsList = Database.Accounts.
+                Find(account => account.ClientProfile.Id == id).
+                SelectMany(acc => acc.Payments);
+
+            if (sortType != null)
+                switch (sortType)
+                {
+                    case "NUM_DESC":
+                        paymentsList = paymentsList.OrderByDescending(p => p.Id);
+                        break;
+                    case "NUM_ASC":
+                        paymentsList = paymentsList.OrderBy(p => p.Id);
+                        break;
+                    case "DATE_DESC":
+                        paymentsList = paymentsList.OrderByDescending(p => p.PaymentDate);
+                        break;
+                    case "DATE_ASC":
+                        paymentsList = paymentsList.OrderBy(p => p.PaymentDate);
+                        break;
+                }
+
+            var paymentsDtoList = Mapper.Map<List<Payment>, List<PaymentDTO>>(paymentsList.ToList());
+            return paymentsDtoList;
+        }
+
     }
 }
