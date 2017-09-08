@@ -290,10 +290,13 @@
     <Compile Include="Areas\Admin\Models\PaymentViewModel.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AccountsController.cs" />
+    <Compile Include="Controllers\CardsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\PaymentsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\CardViewModel.cs" />
     <Compile Include="Models\DebitAccountViewModel.cs" />
     <Compile Include="Models\PaymentViewModel.cs" />
     <Compile Include="Models\RegisterModel.cs" />
@@ -322,6 +325,8 @@
     <Content Include="Views\Accounts\Replenish.cshtml" />
     <Content Include="Views\Accounts\Payment.cshtml" />
     <Content Include="Views\Accounts\Withdraw.cshtml" />
+    <Content Include="Views\Cards\CreateCard.cshtml" />
+    <Content Include="Views\Cards\Index.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -331,6 +336,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Payments\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Payments.BLL\Payments.BLL.csproj">

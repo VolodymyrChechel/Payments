@@ -18,6 +18,8 @@ namespace Payments.WEB.Util
             CreateMap<DebitAccountDTO, ViewModels.DebitAccountViewModel>();
             CreateMap<ViewModels.DebitAccountViewModel, DebitAccountDTO>();
             CreateMap<ViewModels.PaymentViewModel, PaymentDTO>();
+            CreateMap<ViewModels.CardViewModel, CardDto>();
+            CreateMap<CardDto, ViewModels.CardViewModel>();
             //CreateMap<UserDTO, UserInfoDTO>();
         }
     }

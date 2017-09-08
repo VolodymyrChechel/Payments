@@ -155,6 +155,8 @@ namespace Payments.BLL.Services
         {
             Random random = new Random();
 
+            // generate holder name
+            // if it was not passed generate name based on account name
             if (card.Holder == null)
             {
                 var cardHolder = Database.Accounts.Get(card.AccountAccountNumber.Value).ClientProfile;
@@ -195,7 +197,10 @@ namespace Payments.BLL.Services
             if(id == null)
                 throw new ValidationException("Id was not passed", "");
 
-            var accounts = Database.Accounts.Find(acc => acc.ClientProfile.Id == id as string).Include(acc => acc.Cards).SelectMany(acc => acc.Cards).ToList();
+            var accounts = Database.Accounts.
+                Find(acc => acc.ClientProfileId == id).
+                Include(acc => acc.Cards).SelectMany(acc => acc.Cards).
+                ToList();
 
             var accountsDto = Mapper.Map<IEnumerable<Card>, IEnumerable<CardDto>>(accounts);
 
@@ -288,7 +293,7 @@ namespace Payments.BLL.Services
                 throw new ValidationException("Cannot find user", "");
 
             var paymentsList = Database.Accounts.
-                Find(account => account.ClientProfile.Id == id).
+                Find(account => account.ClientProfileId == id).
                 SelectMany(acc => acc.Payments);
 
             if(sortType != null)
@@ -301,7 +306,8 @@ namespace Payments.BLL.Services
                         paymentsList = paymentsList.OrderBy(p => p.Id);
                         break;
                     case "DATE_DESC":
-                        paymentsList = paymentsList.OrderByDescending(p => p.PaymentDate);
+                        paymentsList = paymentsList.
+                            OrderByDescending(p => p.PaymentDate);
                         break;
                     case "DATE_ASC":
                         paymentsList = paymentsList.OrderBy(p => p.PaymentDate);

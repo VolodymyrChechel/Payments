@@ -35,7 +35,7 @@ namespace Payments.WEB.Util
             kernel.Bind<IUserService>().To<UserService>();
             kernel.Bind<IManageService>().To<ManageService>();
             kernel.Bind<IAccountsService>().To<AccountsService>();
-            // add another bind in future
+            kernel.Bind<ICardsService>().To<CardsService>();
         }
     }
 }

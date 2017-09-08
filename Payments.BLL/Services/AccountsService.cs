@@ -20,6 +20,7 @@ namespace Payments.BLL.Services
             Database = uow;
         }
 
+        // return list of account which belongs to a con
         public IEnumerable<DebitAccountDTO> GetAccountsByUserId(string id, string ordering = null)
         {
             if (id == null)
@@ -83,6 +84,10 @@ namespace Payments.BLL.Services
 
             if (account == null)
                 throw new ValidationException("Account was not found", "");
+            
+            if(account.ClientProfile.IsBlocked)
+                throw new ValidationException("Your profile is blocked. All operations are forbidden" , "");
+
             if (account.IsBlocked == true)
                 throw new ValidationException("Account is blocked already", "");
 
@@ -100,6 +105,10 @@ namespace Payments.BLL.Services
 
             if (account == null)
                 throw new ValidationException("Account was not found", "");
+
+            if (account.ClientProfile.IsBlocked)
+                throw new ValidationException("Your profile is blocked. All operations are forbidden", "");
+
             if (account.IsBlocked == false)
                 throw new ValidationException("Account is unblocked", "");
 
@@ -136,6 +145,9 @@ namespace Payments.BLL.Services
         {
             var account = Database.Accounts.Get(accountDto.AccountNumber);
 
+            if (account.ClientProfile.IsBlocked)
+                throw new ValidationException("Your profile is blocked. All operations are forbidden", "");
+
             account.Name = accountDto.Name;
 
             Database.Accounts.Update(account);
@@ -153,6 +165,8 @@ namespace Payments.BLL.Services
 
             var account = Database.Accounts.Get(payment.Recipient);
 
+            if (account.ClientProfile.IsBlocked)
+                throw new ValidationException("Your profile is blocked. All operations are forbidden", "");
             if (account.IsBlocked)
                 throw new ValidationException("The account is blocked. Replenish is canceled", "");
 
@@ -177,6 +191,8 @@ namespace Payments.BLL.Services
 
             var account = Database.Accounts.Get(payment.Recipient);
 
+            if (account.ClientProfile.IsBlocked)
+                throw new ValidationException("Your profile is blocked. All operations are forbidden", "");
             if (account.IsBlocked)
                 throw new AccessException("The account is blocked. Withdrawal is canceled", "");
 
@@ -207,6 +223,9 @@ namespace Payments.BLL.Services
             var account = Database.Accounts.Get(payment.AccountAccountNumber);
             if (account == null)
                 throw new ValidationException("Cannot find the account", "");
+
+            if (account.ClientProfile.IsBlocked)
+                throw new ValidationException("Your profile is blocked. All operations are forbidden", "");
 
             var finiteSum = account.Sum - payment.PaymentSum;
 
