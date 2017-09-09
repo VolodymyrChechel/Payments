@@ -36,6 +36,5 @@ namespace Payments.BLL.Interfaces
         void Payment(PaymentDTO payment);
         IEnumerable<PaymentDTO> GetPaymentsByProfile(string id, string sortType);
         void ConfirmPayment(string id);
-
     }
 }

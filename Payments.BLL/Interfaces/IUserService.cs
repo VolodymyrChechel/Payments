@@ -7,6 +7,7 @@ using Payments.BLL.Infrastructure;
 
 namespace Payments.BLL.Interfaces
 {
+    // identity service
     // used to interract with DAL
     public interface IUserService : IDisposable
     {

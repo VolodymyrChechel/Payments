@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Payments.DAL.Entities
 {
+    // entity for a debit account
     public class DebitAccount : Account
     {
     }

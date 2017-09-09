@@ -7,6 +7,7 @@ using System.Diagnostics.Eventing.Reader;
 
 namespace Payments.DAL.Entities
 {
+    // entity for account
     public class Account
     {
         [Key]

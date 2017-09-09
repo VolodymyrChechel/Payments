@@ -4,6 +4,7 @@ using Payments.DAL.Entities;
 
 namespace Payments.BLL.DTO
 {
+    // DTO class for debit account
     public class DebitAccountDTO
     {
         public int AccountNumber { get; set; }

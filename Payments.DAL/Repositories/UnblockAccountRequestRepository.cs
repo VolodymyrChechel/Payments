@@ -8,6 +8,7 @@ using Payments.DAL.Interfaces;
 
 namespace Payments.DAL.Repositories
 {
+    // implementation Repository for UnblockAccountRequests DbSet
     public class UnblockAccountRequestRepository : IRepository<UnblockAccountRequest>
     {
         private PaymentsContext db;

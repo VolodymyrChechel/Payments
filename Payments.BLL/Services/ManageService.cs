@@ -17,6 +17,8 @@ using Payments.DAL.Interfaces;
 
 namespace Payments.BLL.Services
 {
+    // implementation of IManageService
+    // contains methods to manage all entities by admin
     public class ManageService : IManageService
     {
         private IUnitOfWork Database { get; set; }
@@ -28,9 +30,10 @@ namespace Payments.BLL.Services
 
         public IEnumerable<UserInfoDTO> GetProfiles()
         {
-            var clients = Database.ClientManager.GetAll().Include(profile => profile.ApplicationUser);
+            var clients = Database.ClientManager.GetAll().
+                Include(profile => profile.ApplicationUser);
 
-            return Mapper.Map<IQueryable<ClientProfile>, IEnumerable<UserInfoDTO>>(clients); ;
+            return Mapper.Map<IQueryable<ClientProfile>, IEnumerable<UserInfoDTO>>(clients);
         }
 
         public UserInfoDTO GetProfile(string id)
@@ -56,15 +59,22 @@ namespace Payments.BLL.Services
             Database.Save();
         }
 
-        public IEnumerable<DebitAccountDTO> GetDebitAccountsByProfile(string profileId, bool withoutCard = false, string sortType = null)
+        // get debit accounts which belong to user
+        // we can get account withoud card and select sorting parameter
+        public IEnumerable<DebitAccountDTO> GetDebitAccountsByProfile(
+            string profileId, bool withoutCard = false,
+            string sortType = null)
         {
-            var accountsList = Database.DebitAccounts.Find(debAcc => debAcc.ClientProfileId == profileId).Include(debAcc => debAcc.Cards);
+            var accountsList = Database.DebitAccounts.
+                Find(debAcc => debAcc.ClientProfileId == profileId).
+                Include(debAcc => debAcc.Cards);
             
             if (sortType != null)
                 switch (sortType)
                 {
                     case "NUM_DESC":
-                        accountsList = accountsList.OrderByDescending(acc => acc.AccountNumber);
+                        accountsList = accountsList.
+                            OrderByDescending(acc => acc.AccountNumber);
                         break;
                     case "NUM_ASC":
                         accountsList = accountsList.OrderBy(acc => acc.AccountNumber);
@@ -86,7 +96,8 @@ namespace Payments.BLL.Services
             if (withoutCard)
                 accountsList = accountsList.Where(acc => acc.Cards.Count == 0);
 
-            var accountsDtoList = Mapper.Map<IEnumerable<DebitAccount>, IEnumerable<DebitAccountDTO>>(accountsList.ToList());
+            var accountsDtoList = Mapper.Map<IEnumerable<DebitAccount>,
+                IEnumerable<DebitAccountDTO>>(accountsList.ToList());
 
             return accountsDtoList;
         }
@@ -96,7 +107,9 @@ namespace Payments.BLL.Services
             var account = Mapper.Map<DebitAccountDTO, DebitAccount>(accountDto);
             var user = Database.ClientManager.Get(accountDto.ClientProfileId);
             
-            account.ClientProfile = user ?? throw new ValidationException("User was not found", "Client profile");
+
+            account.ClientProfile = user ?? 
+                throw new ValidationException("User was not found", "Client profile");
             Database.DebitAccounts.Create(account);
             user.Accounts.Add(account);
             Database.Save();
@@ -319,6 +332,7 @@ namespace Payments.BLL.Services
             return paymentsDtoList;
         }
 
+        // method to confirm payment
         public void ConfirmPayment(string id)
         {
             if(id == null)
@@ -335,26 +349,27 @@ namespace Payments.BLL.Services
                 throw new ValidationException("An account with id" +
                     payment.AccountAccountNumber + " was not fount", "");
 
-            payment.PaymentDate = DateTime.UtcNow;
             if (account.IsBlocked)
             {
                 payment.PaymentStatus = PaymentStatus.Rejected;
-                payment.Comment += "/rRejected: account is blocked/r";
+                payment.Comment += " | Rejected: account is blocked | ";
                 Database.Save();
                 throw new ValidationException("Account blocked", "");
             }
-            
+
+            // check sum after operation
             var finiteSum = account.Sum - payment.PaymentSum;
             if (finiteSum < 0)
             {
                 payment.PaymentStatus = PaymentStatus.Rejected;
-                payment.Comment += "/rRejected: no money on an account/r";
+                payment.Comment += "| Rejected: no money on an account | ";
                 Database.Save();
                 throw new ValidationException("Account has no enough money", "");
             }
 
+            payment.PaymentDate = DateTime.UtcNow;
             payment.PaymentStatus = PaymentStatus.Sent;
-            payment.Comment += "/rPayment was sent/r";
+            payment.Comment += " | Payment was sent |";
             account.Sum = finiteSum;
 
             Database.Save();

@@ -12,6 +12,8 @@ using Payments.DAL.Interfaces;
 
 namespace Payments.BLL.Services
 {
+    // implementation of IPaymentsService
+    // allows to manage payments by user
     public class PaymentsService : IPaymentsService
     {
         private IUnitOfWork Database { get; set; }
@@ -103,6 +105,8 @@ namespace Payments.BLL.Services
             if (account == null)
                 throw new ValidationException("Cannot find the account", "");
 
+
+            // check finite sum
             var finiteSum = account.Sum - payment.PaymentSum;
 
             if (finiteSum < 0)
@@ -114,7 +118,5 @@ namespace Payments.BLL.Services
             Database.Payments.Create(payment);
             Database.Save();
         }
-
-
     }
 }

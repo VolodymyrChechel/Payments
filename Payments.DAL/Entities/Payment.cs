@@ -9,6 +9,7 @@ using Payments.Common.Enums;
 
 namespace Payments.DAL.Entities
 {
+    // entity for a payment
     public class Payment
     {
         public int Id { get; set; }

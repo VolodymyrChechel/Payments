@@ -10,6 +10,8 @@ using Payments.DAL.Interfaces;
 
 namespace Payments.BLL.Services
 {
+    // implementation of IRequestsService
+    // allows to block or sent unblock request by admin
     public class RequestsService : IRequestsService
     {
         private IUnitOfWork Database { get; set; }

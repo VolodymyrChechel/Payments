@@ -15,6 +15,7 @@ using Payments.DAL.Interfaces;
 
 namespace Payments.BLL.Services
 {
+    // service for creating new users in identity
     public class UserService : IUserService
     {
         private IUnitOfWork db { get; set; }
@@ -33,7 +34,7 @@ namespace Payments.BLL.Services
                 user = new ApplicationUser {Email = userDto.Email, UserName = userDto.Email};
 
                 var result = await db.UserManager.CreateAsync(user, userDto.Password);
-                if (result.Errors.Count() > 0)
+                if (result.Errors.Any())
                     return new OperationDetails(false, result.Errors.FirstOrDefault(), "");
 
                 // adding the user to role

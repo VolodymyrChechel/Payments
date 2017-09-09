@@ -1,5 +1,6 @@
 ﻿namespace Payments.Common.StaticData
 {
+    // validation regex string
     public static class RegExStrings
     {
         public const string Email = @"^[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$";

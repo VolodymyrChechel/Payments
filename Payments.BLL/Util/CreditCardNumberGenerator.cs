@@ -6,32 +6,9 @@ using System.Web;
 
 namespace Payments.BLL.Util
 {
+    // class is used to create credit card numbers
     public class CreditCardNumberGenerator
     {
-        /*This is a port of the port of of the Javascript credit card number generator now in C#
-        * by Kev Hunter https://kevhunter.wordpress.com
-        * See the license below. Obviously, this is not a Javascript credit card number
-         generator. However, The following class is a port of a Javascript credit card
-         number generator.
-         @author robweber
-         Javascript credit card number generator Copyright (C) 2006 Graham King
-         graham@darkcoding.net
-         This program is free software; you can redistribute it and/or modify it
-         under the terms of the GNU General Public License as published by the
-         Free Software Foundation; either version 2 of the License, or (at your
-         option) any later version.
-         This program is distributed in the hope that it will be useful, but
-         WITHOUT ANY WARRANTY; without even the implied warranty of
-         MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
-         Public License for more details.
- 
-         You should have received a copy of the GNU General Public License along
-         with this program; if not, write to the Free Software Foundation, Inc.,
-         51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
-         www.darkcoding.net
-        */
-
-
         public static string[] AMEX_PREFIX_LIST = new[] { "34", "37" };
 
         public static string[] DINERS_PREFIX_LIST = new[]
@@ -68,11 +45,6 @@ namespace Payments.BLL.Util
 
         public static string[] VOYAGER_PREFIX_LIST = new[] { "8699" };
 
-        /*
-      'prefix' is the start of the  CC number as a string, any number
-        private of digits   'length' is the length of the CC number to generate.
-     * Typically 13 or  16
-        */
         private static string CreateFakeCreditCardNumber(string prefix, int length)
         {
             string ccnumber = prefix;
@@ -84,10 +56,8 @@ namespace Payments.BLL.Util
                 ccnumber += Math.Floor(rnd * 10);
 
                 //sleep so we get a different seed
-
                 Thread.Sleep(20);
             }
-
 
             // reverse number and convert to int
             var reversedCCnumberstring = ccnumber.ToCharArray().Reverse();
@@ -95,7 +65,6 @@ namespace Payments.BLL.Util
             var reversedCCnumberList = reversedCCnumberstring.Select(c => Convert.ToInt32(c.ToString()));
 
             // calculate sum
-
             int sum = 0;
             int pos = 0;
             int[] reversedCCnumber = reversedCCnumberList.ToArray();

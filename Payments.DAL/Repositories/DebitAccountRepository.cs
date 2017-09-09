@@ -8,6 +8,7 @@ using Payments.DAL.Interfaces;
 
 namespace Payments.DAL.Repositories
 {
+    // implementation Repository for DebitAccount DbSet
     public class DebitAccountRepository : IRepository<DebitAccount>
     {
         private PaymentsContext db;

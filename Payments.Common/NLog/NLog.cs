@@ -3,6 +3,7 @@ using NLog;
 
 namespace Payments.Common.NLog
 {
+    // allows use one loger object in different projects
     public static class NLog
     {
         public static void LogTrace(Type declaringType, string message)

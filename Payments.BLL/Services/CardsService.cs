@@ -13,6 +13,7 @@ using Payments.DAL.Interfaces;
 
 namespace Payments.BLL.Services
 {
+    // implementation of ICardsService
     public class CardsService : ICardsService
     {
         private IUnitOfWork Database { get; set; }
@@ -35,7 +36,7 @@ namespace Payments.BLL.Services
             Random random = new Random();
 
             // generate holder name
-            // if it was not passed generate name based on account name
+            // if it was not passed to generate name based on account name
             if (card.Holder == null)
             {
                 var cardHolder = Database.Accounts.Get(card.AccountAccountNumber.Value).ClientProfile;
@@ -77,6 +78,8 @@ namespace Payments.BLL.Services
             return cardsDto;
         }
 
+        // get debit accounts accounts
+        // we can get account withoud card and select sorting parameter
         public IEnumerable<DebitAccountDTO> GetDebitAccountsByProfile(string profileId, bool withoutCard = false, string sortType = null)
         {
             var accountsList = Database.DebitAccounts.Find(debAcc => debAcc.ClientProfileId == profileId).Include(debAcc => debAcc.Cards);

@@ -3,6 +3,7 @@ using Payments.Common.Enums;
 
 namespace Payments.BLL.DTO
 {
+    // DTO class for unblock requests
     public class UnblockAccountRequestDTO
     {
         public int Id { get; set; }

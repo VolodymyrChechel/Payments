@@ -10,6 +10,7 @@ using Payments.DAL.Entities;
 
 namespace Payments.BLL.DTO
 {
+    // DTO class for payment
     public class PaymentDTO
     {
         public int Id { get; set; }
@@ -17,11 +18,8 @@ namespace Payments.BLL.DTO
         public decimal PaymentSum { get; set; }
 
         public PaymentType PaymentType { get; set; }
-
         public PaymentStatus PaymentStatus { get; set; }
-
         public DateTime PaymentDate { get; set; }
-
         public string Recipient { get; set; }
 
         public string Comment { get; set; }

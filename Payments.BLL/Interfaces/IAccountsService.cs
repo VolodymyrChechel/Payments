@@ -3,6 +3,8 @@ using Payments.BLL.DTO;
 
 namespace Payments.BLL.Interfaces
 {
+    // service for accounts
+    // allows to manage accounts with user role
     public interface IAccountsService
     {
         IEnumerable<DebitAccountDTO> GetAccountsByUserId(string id, string ordering = null);

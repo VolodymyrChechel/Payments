@@ -7,6 +7,7 @@ using Payments.DAL.Interfaces;
 
 namespace Payments.DAL.Repositories
 {
+    // implementation Repository for ClientProfiles DbSet
     public class ClientManager : IClientManager
     {
         private PaymentsContext db;

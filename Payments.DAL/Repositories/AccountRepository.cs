@@ -9,6 +9,7 @@ using Payments.DAL.Interfaces;
 
 namespace Payments.DAL.Repositories
 {
+    // implementation Repository for Account DbSet
     public class AccountRepository : IRepository<Account>
     {
         private PaymentsContext db;
@@ -47,6 +48,7 @@ namespace Payments.DAL.Repositories
         {
             var account = db.Accounts.Find(id);
 
+            // when account has existing relation data to deny deleting
             if (account != null)
                 if (account.Cards.Any() || account.Payments.Any() ||
                     account.UnblockAccountRequests.Any())

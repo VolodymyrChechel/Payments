@@ -4,6 +4,7 @@ using Payments.DAL.Repositories;
 
 namespace Payments.BLL.Infrastructure
 {
+    // module for Ninject DI
     public class ServiceModule : NinjectModule
     {
         private string connectionString;

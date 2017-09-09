@@ -3,6 +3,8 @@ using Payments.BLL.DTO;
 
 namespace Payments.BLL.Interfaces
 {
+    // service for payments
+    // used by the user to manage with payments
     public interface IPaymentsService
     {
         PaymentDTO GetPayment(int? id);

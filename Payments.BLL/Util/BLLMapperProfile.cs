@@ -4,6 +4,7 @@ using Payments.DAL.Entities;
 
 namespace Payments.BLL.Util
 {
+    // automapper profile
     public class BLLUserProfile : Profile
     {
         public BLLUserProfile()
@@ -17,7 +18,6 @@ namespace Payments.BLL.Util
             CreateMap <Payment, PaymentDTO>();
             CreateMap <UnblockAccountRequest, UnblockAccountRequestDTO>();
             CreateMap <UnblockAccountRequestDTO, UnblockAccountRequest>();
-            //CreateMap<UserDTO, UserInfoDTO>();
         }
     }
 }

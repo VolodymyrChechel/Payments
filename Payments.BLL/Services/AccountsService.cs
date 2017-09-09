@@ -11,6 +11,7 @@ using Payments.DAL.Interfaces;
 
 namespace Payments.BLL.Services
 {
+    // implementation IAccountService
     public class AccountsService : IAccountsService
     {
         private IUnitOfWork Database { get; set; }
@@ -20,7 +21,8 @@ namespace Payments.BLL.Services
             Database = uow;
         }
 
-        // return list of account which belongs to a con
+        // return list of account which belongs to a certain user
+        // contain optional parameter for sorting
         public IEnumerable<DebitAccountDTO> GetAccountsByUserId(string id, string ordering = null)
         {
             if (id == null)
@@ -112,10 +114,12 @@ namespace Payments.BLL.Services
             if (account.IsBlocked == false)
                 throw new ValidationException("Account is unblocked already", "");
 
+            // get not considered requests
             var lastAccount = Database.UnblockAccountRequests
                 .Find(req => req.AccountAccountNumber == account.AccountNumber)
                 .OrderByDescending(req => req.RequestTime).FirstOrDefault();
 
+            // when user has not considered request throws exeption
             if (lastAccount?.Status == UnblockRequestStatus.Prepared)
                 throw new ValidationException("Last request was not considered", "");
 
@@ -214,6 +218,7 @@ namespace Payments.BLL.Services
             Database.Save();
         }
 
+        // create new payment
         public void Payment(PaymentDTO paymentDto)
         {
             if (paymentDto == null)
@@ -235,6 +240,7 @@ namespace Payments.BLL.Services
             if (finiteSum < 0)
                 throw new ValidationException("Sum of payment cannot be much than " + account.Sum, "Sum");
 
+            // payment prepared for consideration
             payment.PaymentStatus = PaymentStatus.Prepared;
             payment.Account = account;
 
