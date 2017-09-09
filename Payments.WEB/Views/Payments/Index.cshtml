@@ -30,6 +30,7 @@
                 <th>Recipient</th>
                 <th>Comment</th>
                 <th>Status</th>
+                <th></th>
             </tr>
             </thead>
             <tbody>
@@ -44,6 +45,7 @@
                     <td> @payment.Recipient </td>
                     <td> @payment.Comment </td>
                     <td> @payment.PaymentStatus </td>
+                    <td> @Html.ActionLink("Get cheque", "CreateCheque", new {id = payment.Id}, new {target = "_blank" }) </td>
                 </tr>
             }
             </tbody>

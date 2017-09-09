@@ -21,6 +21,21 @@ namespace Payments.BLL.Services
             Database = uow;
         }
 
+        public PaymentDTO GetPayment(int? id)
+        {
+            if (id == null)
+                throw new ValidationException("Payment id was not passed", "");
+
+            var payment = Database.Payments.Get(id);
+
+            if (payment == null)
+                throw new ValidationException("Payment was not found", "");
+
+            var paymentDto = Mapper.Map<Payment, PaymentDTO>(payment);
+
+            return paymentDto;
+        }
+        
         public IEnumerable<PaymentDTO> GetPayments(string id, string sortType)
         {
             if (id == null)

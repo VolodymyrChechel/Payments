@@ -12,6 +12,7 @@ using Microsoft.Owin.Security;
 using Payments.BLL.DTO;
 using Payments.BLL.Infrastructure;
 using Payments.BLL.Interfaces;
+using Payments.Common.NLog;
 using Payments.WEB.Models;
 
 namespace Payments.WEB.Controllers
@@ -30,6 +31,7 @@ namespace Payments.WEB.Controllers
 
         public ActionResult Login()
         {
+
             return View();
         }
 

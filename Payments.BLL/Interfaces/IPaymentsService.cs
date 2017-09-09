@@ -5,6 +5,7 @@ namespace Payments.BLL.Interfaces
 {
     public interface IPaymentsService
     {
+        PaymentDTO GetPayment(int? id);
         IEnumerable<PaymentDTO> GetPayments(string id, string sortType = null);
         IEnumerable<DebitAccountDTO> GetDebitAccountsByProfile(string id);
         void CreatePayment(PaymentDTO payment);
