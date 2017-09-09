@@ -24,7 +24,7 @@ namespace Payments.DAL.Repositories
 
         public UnblockAccountRequest Get(object id)
         {
-            return db.UnblockAccountRequests.Find(id);
+            return db.UnblockAccountRequests.Find(Convert.ToInt32(id));
         }
 
         public IQueryable<UnblockAccountRequest> Find(Func<UnblockAccountRequest, bool> predicate)

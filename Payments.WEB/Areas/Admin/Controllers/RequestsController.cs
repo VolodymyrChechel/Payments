@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Payments.BLL.Infrastructure;
+using Payments.BLL.Interfaces;
 
 namespace Payments.WEB.Areas.Admin.Controllers
 {
@@ -11,15 +13,48 @@ namespace Payments.WEB.Areas.Admin.Controllers
     {
         private IRequestsService service;
 
-        public UsersController(IRequestsService serv)
+        public RequestsController(IRequestsService serv)
         {
             service = serv;
         }
 
-        // GET: Admin/Requests
-        public ActionResult Index()
+        // show 
+        public ActionResult List()
         {
-            return View();
+            var requestList = service.GetRequestsList();
+
+            ViewBag.Message = TempData?["Message"];
+            return View(requestList);
+        }
+
+        public ActionResult Accept(string id)
+        {
+            try
+            {
+                service.AcceptRequest(id);
+                TempData["Message"] = "Reqeust " + id + " was accepted";
+            }
+            catch (ValidationException e)
+            {
+                TempData["Message"] = e.Message;
+            }
+
+            return RedirectToAction("List");
+        }
+
+        public ActionResult Reject(string id)
+        {
+            try
+            {
+                service.RejectRequest(id);
+                TempData["Message"] = "Reqeust " + id + " was rejected";
+            }
+            catch (ValidationException e)
+            {
+                TempData["Message"] = e.Message;
+            }
+
+            return RedirectToAction("List");
         }
     }
 }

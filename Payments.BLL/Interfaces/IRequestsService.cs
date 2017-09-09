@@ -5,7 +5,9 @@ namespace Payments.BLL.Interfaces
 {
     public interface IRequestsService
     {
-        IEnumerable<RequestDto> GetRequestsList();
-        void SendDecision();
+        IEnumerable<UnblockAccountRequestDTO> GetRequestsList();
+
+        void AcceptRequest(string id);
+        void RejectRequest(string id);
     }
 }

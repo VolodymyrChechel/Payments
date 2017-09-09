@@ -240,7 +240,7 @@
     <Content Include="Content\bootstrap-datetimepicker-build.less" />
     <Content Include="Areas\Admin\Views\web.config" />
     <Content Include="Areas\Admin\Views\_ViewStart.cshtml" />
-    <Content Include="Areas\Admin\Views\Requests\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\Requests\List.cshtml" />
     <Content Include="Areas\Admin\Views\Users\List.cshtml" />
     <Content Include="Areas\Admin\Views\Users\Show.cshtml" />
     <Content Include="Areas\Admin\Views\Users\Accounts.cshtml" />
