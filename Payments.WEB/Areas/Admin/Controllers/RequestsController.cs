@@ -6,9 +6,16 @@ using System.Web.Mvc;
 
 namespace Payments.WEB.Areas.Admin.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "admin")]
     public class RequestsController : Controller
     {
+        private IRequestsService service;
+
+        public UsersController(IRequestsService serv)
+        {
+            service = serv;
+        }
+
         // GET: Admin/Requests
         public ActionResult Index()
         {

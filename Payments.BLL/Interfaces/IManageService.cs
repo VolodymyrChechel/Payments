@@ -30,7 +30,7 @@ namespace Payments.BLL.Interfaces
         IEnumerable<CardDto> GetCardsByProfile(string id);
         void DeleteCard(string number);
 
-        // operations refer to payment
+        // payments methods
         void Replenish(PaymentDTO payment);
         void Withdraw(PaymentDTO payment);
         void Payment(PaymentDTO payment);

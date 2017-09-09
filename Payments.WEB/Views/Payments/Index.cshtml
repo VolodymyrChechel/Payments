@@ -1,0 +1,82 @@
+﻿@using Payments.Common.Enums
+@model IEnumerable<PaymentViewModel>
+    
+<h2> List of payments </h2>
+
+<h4 class="text-danger"> @ViewBag.Message </h4>
+
+@if (Model.Count() != 0)
+{
+    <div class="form-group col-md-offset-7 col-md-5">
+        <label for="paymentsOrderChange" class=" col-md-3 control-label"> Select ordering </label>
+        <div class="col-md-9">
+            <select class="form-control" id="paymentsOrderChange">
+                <option value="NUM_ASC">Sort ascending by number</option>
+                <option value="NUM_DESC">Sort descending by number</option>
+                <option value="DATE_ASC">Sort ascending by date</option>
+                <option value="DATE_DESC">Sort descending by date</option>
+            </select>
+        </div>
+    </div>
+    <div class="clearfix">
+        <table class="table">
+            <thead>
+            <tr>
+                <th class="col-md-1">Payment number</th>
+                <th class="col-md-1">Account number</th>
+                <th>Payment's date</th>
+                <th>Sum</th>
+                <th>Type</th>
+                <th>Recipient</th>
+                <th>Comment</th>
+                <th>Status</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var payment in Model)
+            {
+                <tr>
+                    <td> @payment.Id </td>
+                    <td> @payment.AccountAccountNumber </td>
+                    <td> @payment.PaymentDate</td>
+                    <td> @payment.PaymentSum </td>
+                    <td> @payment.PaymentType </td>
+                    <td> @payment.Recipient </td>
+                    <td> @payment.Comment </td>
+                    <td> @payment.PaymentStatus </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        @if (ViewBag.Selected != null)
+        {
+            <text>
+        var sel = document.getElementById("paymentsOrderChange");
+        var val = '@ViewBag.Selected';
+        for (var i = 0, j = sel.options.length; i < j; ++i) {
+            if (sel.options[i].value === val) {
+                sel.selectedIndex = i;
+                break;
+            }
+        }
+            </text>
+        
+        }
+        document.getElementById("paymentsOrderChange").addEventListener("change", changeOrderAccount);
+
+        function changeOrderAccount() {
+            var e = document.getElementById("paymentsOrderChange");
+            var option = e.options[e.selectedIndex].value;
+            window.location.href = '/payments/Index/?sort=' + option;
+        }
+    </script>
+}
+else
+{
+    <p class="text-danger"> This user has no payments yet </p>
+}
+
+@Html.ActionLink("Make new payment", "CreatePayment", new { @class = "btn btn-success btn-sm" })

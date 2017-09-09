@@ -14,7 +14,9 @@ namespace Payments.BLL.Util
             CreateMap<CardDto, Card>();
             CreateMap<Card, CardDto>();
             CreateMap<PaymentDTO, Payment>();
-            CreateMap <Payment, PaymentDTO> ();
+            CreateMap <Payment, PaymentDTO>();
+            CreateMap <UnblockAccountRequest, UnblockAccountRequestDTO>();
+            CreateMap <UnblockAccountRequestDTO, UnblockAccountRequest>();
             //CreateMap<UserDTO, UserInfoDTO>();
         }
     }

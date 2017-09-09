@@ -90,9 +90,17 @@ namespace Payments.WEB.Controllers
                 var debitAccDto = Mapper.Map<DebitAccountViewModel, DebitAccountDTO>(debitAcc);
                 debitAccDto.ClientProfileId = userId;
 
-                service.CreateDebitAccount(debitAccDto);
+                try
+                {
+                    service.CreateDebitAccount(debitAccDto);
 
-                TempData["Message"] = "New debit account was created";
+                    TempData["Message"] = "New debit account was created";
+                }
+                catch (ValidationException e)
+                {
+                    TempData["Message"] = e.Message;
+                }
+
                 return RedirectToAction("Index");
             }
 
@@ -233,8 +241,10 @@ namespace Payments.WEB.Controllers
                 catch (Exception e)
                 {
                     TempData["Message"] = e.Message;
-                    return RedirectToAction("Index");
+                    
                 }
+
+                return RedirectToAction("Index");
             }
 
             return View(payment);

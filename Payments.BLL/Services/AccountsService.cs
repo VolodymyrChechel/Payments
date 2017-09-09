@@ -110,7 +110,7 @@ namespace Payments.BLL.Services
                 throw new ValidationException("Your profile is blocked. All operations are forbidden", "");
 
             if (account.IsBlocked == false)
-                throw new ValidationException("Account is unblocked", "");
+                throw new ValidationException("Account is unblocked already", "");
 
             var lastAccount = Database.UnblockAccountRequests
                 .Find(req => req.AccountAccountNumber == account.AccountNumber)
@@ -134,6 +134,9 @@ namespace Payments.BLL.Services
         {
             if (accountDto == null)
                 throw new ValidationException("Account was not passed", "");
+
+            if (Database.ClientManager.Get(accountDto.ClientProfileId).IsBlocked)
+                throw new ValidationException("Your profile is blocked. All operations are forbidden", "");
 
             var account = Mapper.Map<DebitAccountDTO, DebitAccount>(accountDto);
 

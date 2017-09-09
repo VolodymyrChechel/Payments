@@ -262,6 +262,7 @@ namespace Payments.BLL.Services
             Database.Save();
         }
 
+        // create payment
         public void Payment(PaymentDTO paymentDto)
         {
             if (paymentDto == null)

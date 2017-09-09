@@ -6,14 +6,13 @@
 
 <h2>List of accounts</h2>
 
-
 <h4 class="text-danger"> @ViewBag.Message </h4>
 
 @if (Model != null && Model.Count() != 0)
 {
     
     <div class="form-group col-md-offset-7 col-md-5">
-        <label for="paymentsOrderChange" class=" col-md-3 control-label"> Select ordering </label>
+        <label for="accountsOrderChange" class=" col-md-3 control-label"> Select ordering </label>
         <div class="col-md-9">
             <select class="form-control" id="accountsOrderChange">
                 <option value="NUM_ASC">Sort ascending by number</option>
@@ -74,7 +73,6 @@
             }
             </tbody>
         </table>
-        @Html.ActionLink("Create a new account", "CreateDebitAccount", null, new {@class = "btn btn-success btn-sm"})
     </div>
 
     <script>
@@ -107,3 +105,5 @@ else
 {
     <p class="text-danger"> You have no account yet. Create a new just now </p>
 }
+
+@Html.ActionLink("Create a new account", "CreateDebitAccount", null, new { @class = "btn btn-success btn-sm" })

@@ -20,7 +20,7 @@ namespace Payments.WEB.Util
             CreateMap<ViewModels.PaymentViewModel, PaymentDTO>();
             CreateMap<ViewModels.CardViewModel, CardDto>();
             CreateMap<CardDto, ViewModels.CardViewModel>();
-            //CreateMap<UserDTO, UserInfoDTO>();
+            CreateMap<PaymentDTO, ViewModels.PaymentViewModel>();
         }
     }
 }

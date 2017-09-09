@@ -327,6 +327,8 @@
     <Content Include="Views\Accounts\Withdraw.cshtml" />
     <Content Include="Views\Cards\CreateCard.cshtml" />
     <Content Include="Views\Cards\Index.cshtml" />
+    <Content Include="Views\Payments\Index.cshtml" />
+    <Content Include="Views\Payments\CreatePayment.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -336,7 +338,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\Payments\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Payments.BLL\Payments.BLL.csproj">

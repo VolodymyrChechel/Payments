@@ -30,6 +30,7 @@ namespace Payments.WEB.Controllers
                 var cardsDto = service.GetCardsByProfile(userId);
                 var cards = Mapper.Map<IEnumerable<CardDto>, IEnumerable<CardViewModel>>(cardsDto);
 
+                ViewBag.Message = TempData?["Message"];
                 return View(cards);
             }
             catch (ValidationException e)
@@ -82,12 +83,12 @@ namespace Payments.WEB.Controllers
                 {
                     service.CreateCard(depositCardDto, accountId);
                     TempData["Message"] = "The new card was successfully created";
-                    return RedirectToAction("Index");
                 }
                 catch (ValidationException e)
                 {
-                    ViewBag["Message"] = e.Message;
+                    TempData["Message"] = e.Message;
                 }
+                return RedirectToAction("Index");
             }
 
             return View(card);
