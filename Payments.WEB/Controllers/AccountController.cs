@@ -31,6 +31,7 @@ namespace Payments.WEB.Controllers
 
         public ActionResult Login()
         {
+            NLog.LogInfo(this.GetType(), "Method Login execution");
 
             return View();
         }
@@ -39,6 +40,8 @@ namespace Payments.WEB.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Login(LoginModel model)
         {
+            NLog.LogInfo(this.GetType(), "Method Login POST execution");
+
             await SetInitialDataAsync();
 
             if (ModelState.IsValid)
@@ -65,6 +68,8 @@ namespace Payments.WEB.Controllers
 
         public ActionResult Register()
         {
+            NLog.LogInfo(this.GetType(), "Method Register execution");
+
             RegisterModel initialInput = new RegisterModel()
             {
                 Birthday = DateTime.Parse("11/11/1950"),
@@ -83,6 +88,8 @@ namespace Payments.WEB.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Register(RegisterModel model)
         {
+            NLog.LogInfo(this.GetType(), "Method Register POST execution");
+
             await SetInitialDataAsync();
             
             if (ModelState.IsValid)
@@ -115,6 +122,8 @@ namespace Payments.WEB.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult LogOff()
         {
+            NLog.LogInfo(this.GetType(), "Method LogOff POST execution");
+
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie, DefaultAuthenticationTypes.ExternalCookie);
             return RedirectToAction("Index", "Home");
         }
@@ -122,11 +131,15 @@ namespace Payments.WEB.Controllers
         [ChildActionOnly]
         public ActionResult SuccessRegister()
         {
+            NLog.LogInfo(this.GetType(), "Method SuccessRegister execution");
+
             return View();
         }
 
         private async Task SetInitialDataAsync()
         {
+            NLog.LogInfo(this.GetType(), "Method SetInitialDataAsync execution");
+
             var userList = new List<UserDTO>
             {
                 new UserDTO

@@ -5,6 +5,7 @@ using Payments.BLL.DTO;
 using Payments.BLL.Infrastructure;
 using Payments.BLL.Interfaces;
 using Payments.Common.Enums;
+using Payments.Common.NLog;
 using Payments.DAL.Entities;
 using Payments.DAL.Interfaces;
 
@@ -18,11 +19,15 @@ namespace Payments.BLL.Services
 
         public RequestsService(IUnitOfWork uow)
         {
+            NLog.LogInfo(this.GetType(), "Constructor RequestsService execution");
+
             Database = uow;
         }
         
         public IEnumerable<UnblockAccountRequestDTO> GetRequestsList()
         {
+            NLog.LogInfo(this.GetType(), "Method GetRequestsList execution");
+
             var requestsList = Database.UnblockAccountRequests.GetAll().
                 Where(request => request.Status == UnblockRequestStatus.Prepared).
                 ToList();
@@ -35,6 +40,8 @@ namespace Payments.BLL.Services
 
         public void AcceptRequest(string id)
         {
+            NLog.LogInfo(this.GetType(), "Method AcceptRequest execution");
+
             if(id == null)
                 throw new ValidationException("Id was not passed", "");
 
@@ -55,6 +62,8 @@ namespace Payments.BLL.Services
 
         public void RejectRequest(string id)
         {
+            NLog.LogInfo(this.GetType(), "Method RejectRequest execution");
+
             if (id == null)
                 throw new ValidationException("Id was not passed", "");
 

@@ -8,6 +8,7 @@ using Payments.BLL.Infrastructure;
 using Payments.BLL.Interfaces;
 using Payments.BLL.Util;
 using Payments.Common.Enums;
+using Payments.Common.NLog;
 using Payments.DAL.Entities;
 using Payments.DAL.Interfaces;
 
@@ -20,11 +21,15 @@ namespace Payments.BLL.Services
 
         public CardsService(IUnitOfWork uow)
         {
+            NLog.LogInfo(this.GetType(), "Constructor CardsService execution");
+
             Database = uow;
         }
 
         public void CreateCard(CardDto card, string userId)
         {
+            NLog.LogInfo(this.GetType(), "Method CreateCard execution");
+
             var account = Database.Accounts.Get(card.AccountAccountNumber);
 
             if(account?.ClientProfileId != userId)
@@ -68,6 +73,8 @@ namespace Payments.BLL.Services
         
         public IEnumerable<CardDto> GetCardsByProfile(string profileId)
         {
+            NLog.LogInfo(this.GetType(), "Method GetDebitAccountsByProfile execution");
+
             if (profileId == null)
                 throw new ValidationException("Id was not passed", "");
 
@@ -82,6 +89,8 @@ namespace Payments.BLL.Services
         // we can get account withoud card and select sorting parameter
         public IEnumerable<DebitAccountDTO> GetDebitAccountsByProfile(string profileId, bool withoutCard = false, string sortType = null)
         {
+            NLog.LogInfo(this.GetType(), "Method GetDebitAccountsByProfile execution");
+
             var accountsList = Database.DebitAccounts.Find(debAcc => debAcc.ClientProfileId == profileId).Include(debAcc => debAcc.Cards);
 
             if (sortType != null)

@@ -6,6 +6,7 @@ using Payments.BLL.DTO;
 using Payments.BLL.Infrastructure;
 using Payments.BLL.Interfaces;
 using Payments.Common.Enums;
+using Payments.Common.NLog;
 using Payments.DAL.Entities;
 using Payments.DAL.Interfaces;
 
@@ -18,6 +19,8 @@ namespace Payments.BLL.Services
 
         public AccountsService(IUnitOfWork uow)
         {
+            NLog.LogInfo(this.GetType(), "Constructor AccountsService execution");
+
             Database = uow;
         }
 
@@ -25,6 +28,8 @@ namespace Payments.BLL.Services
         // contain optional parameter for sorting
         public IEnumerable<DebitAccountDTO> GetAccountsByUserId(string id, string ordering = null)
         {
+            NLog.LogInfo(this.GetType(), "Method GetAccountsByUserId execution");
+
             if (id == null)
                 throw new ValidationException("Id was not passed", "");
 
@@ -64,6 +69,8 @@ namespace Payments.BLL.Services
 
         public DebitAccountDTO GetAccount(string id)
         {
+            NLog.LogInfo(this.GetType(), "Method GetAccount execution");
+
             if (id == null)
                 throw new ValidationException("Id was not passed", "");
 
@@ -79,6 +86,8 @@ namespace Payments.BLL.Services
 
         public void BlockAccount(string id)
         {
+            NLog.LogInfo(this.GetType(), "Method BlockAccount execution");
+
             if (id == null)
                 throw new ValidationException("Id was not passed", "");
 
@@ -100,6 +109,8 @@ namespace Payments.BLL.Services
 
         public void UnblockAccountRequest(string id)
         {
+            NLog.LogInfo(this.GetType(), "Method UnblockAccountRequest execution");
+
             if (id == null)
                 throw new ValidationException("Id was not passed", "");
 
@@ -136,6 +147,8 @@ namespace Payments.BLL.Services
 
         public void CreateDebitAccount(DebitAccountDTO accountDto)
         {
+            NLog.LogInfo(this.GetType(), "Method CreateDebitAccount execution");
+
             if (accountDto == null)
                 throw new ValidationException("Account was not passed", "");
 
@@ -150,6 +163,8 @@ namespace Payments.BLL.Services
 
         public void EditAccountName(DebitAccountDTO accountDto)
         {
+            NLog.LogInfo(this.GetType(), "Method EditAccountName execution");
+
             var account = Database.Accounts.Get(accountDto.AccountNumber);
 
             if (account.ClientProfile.IsBlocked)
@@ -163,6 +178,8 @@ namespace Payments.BLL.Services
 
         public void Replenish(PaymentDTO paymentDto)
         {
+            NLog.LogInfo(this.GetType(), "Method Replenish execution");
+
             if (paymentDto == null)
                 throw new ValidationException("Payment object is not passed", "");
 
@@ -189,6 +206,8 @@ namespace Payments.BLL.Services
 
         public void Withdraw(PaymentDTO paymentDto)
         {
+            NLog.LogInfo(this.GetType(), "Method Withdraw execution");
+
             if (paymentDto == null)
                 throw new NullReferenceException("Payment object is not passed");
 
@@ -221,6 +240,8 @@ namespace Payments.BLL.Services
         // create new payment
         public void Payment(PaymentDTO paymentDto)
         {
+            NLog.LogInfo(this.GetType(), "Method Payment execution");
+
             if (paymentDto == null)
                 throw new ValidationException("Payment object is not passed", "");
 
@@ -250,6 +271,8 @@ namespace Payments.BLL.Services
 
         public IEnumerable<PaymentDTO> GetPaymentsByProfile(string id, string sortType)
         {
+            NLog.LogInfo(this.GetType(), "Method GetPaymentsByProfile execution");
+
             if (id == null)
                 throw new ValidationException("Cannot find user", "");
 

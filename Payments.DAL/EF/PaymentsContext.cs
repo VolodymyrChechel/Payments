@@ -1,5 +1,6 @@
 ﻿using System.Data.Entity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using Payments.Common.NLog;
 using Payments.DAL.Entities;
 
 namespace Payments.DAL.EF
@@ -9,6 +10,8 @@ namespace Payments.DAL.EF
     {
         public PaymentsContext(string connectionString) : base(connectionString)
         {
+            NLog.LogInfo(this.GetType(), "Constructor PaymentsContext execution");
+
             Database.SetInitializer(new DropCreateDatabaseIfModelChanges<PaymentsContext>());
         }
 

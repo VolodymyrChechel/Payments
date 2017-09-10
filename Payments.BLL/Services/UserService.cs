@@ -9,6 +9,7 @@ using Microsoft.AspNet.Identity;
 using Payments.BLL.DTO;
 using Payments.BLL.Infrastructure;
 using Payments.BLL.Interfaces;
+using Payments.Common.NLog;
 using Payments.DAL.Entities;
 using Payments.DAL.Identity;
 using Payments.DAL.Interfaces;
@@ -22,11 +23,15 @@ namespace Payments.BLL.Services
 
         public UserService(IUnitOfWork uow)
         {
+            NLog.LogInfo(this.GetType(), "Constructor UserService execution");
+
             db = uow;
         }
 
         public async Task<OperationDetails> Create(UserDTO userDto)
         {
+            NLog.LogInfo(this.GetType(), "Method Create execution");
+
             ApplicationUser user = await db.UserManager.FindByEmailAsync(userDto.Email);
 
             if (user == null)
@@ -65,6 +70,8 @@ namespace Payments.BLL.Services
 
         public async Task<ClaimsIdentity> Authenticate(UserDTO userDto)
         {
+            NLog.LogInfo(this.GetType(), "Method Authenticate execution");
+
             ClaimsIdentity claim = null;
 
             // search user
@@ -81,6 +88,8 @@ namespace Payments.BLL.Services
         // initialization data
         public async Task SetInitialData(UserDTO adminDto, List<UserDTO> usersDto, List<string> roles)
         {
+            NLog.LogInfo(this.GetType(), "Method SetInitialData execution");
+            
             // adding initial roles
             foreach (var roleName in roles)
             {

@@ -4,6 +4,7 @@ using Payments.WEB.Models;
 using System.Text;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
+using Payments.Common.NLog;
 
 namespace Payments.WEB.Util
 {
@@ -11,6 +12,8 @@ namespace Payments.WEB.Util
     {
         public MemoryStream CreateDocument(PaymentViewModel payment)
         {
+            NLog.LogTrace(this.GetType(), "Create method execution");
+
             MemoryStream stream = new MemoryStream();
             StringBuilder status = new StringBuilder("");
             DateTime time = DateTime.Now;
@@ -19,8 +22,6 @@ namespace Payments.WEB.Util
             string pdfFileName = string.Format("Payment" + time.ToString("yyyyMMMMdd ") + ".pdf");
             Document document = new Document();
             document.SetMargins(25f, 25f, 25f, 25f);
-
-            //string fileDirectory = Server.MapPath(pdfFileName);
 
             PdfWriter.GetInstance(document, stream).CloseStream = false;
             document.Open();

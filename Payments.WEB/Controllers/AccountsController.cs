@@ -6,6 +6,7 @@ using Microsoft.AspNet.Identity;
 using Payments.BLL.DTO;
 using Payments.BLL.Infrastructure;
 using Payments.BLL.Interfaces;
+using Payments.Common.NLog;
 using Payments.WEB.Models;
 
 namespace Payments.WEB.Controllers
@@ -17,11 +18,15 @@ namespace Payments.WEB.Controllers
 
         public AccountsController(IAccountsService serv)
         {
+            NLog.LogInfo(this.GetType(), "Constructor execution");
+
             service = serv;
         }
 
         public ActionResult Index(string sort)
         {
+            NLog.LogInfo(this.GetType(), "Method Index execution");
+
             var userId = User.Identity.GetUserId();
 
             try
@@ -37,6 +42,8 @@ namespace Payments.WEB.Controllers
             }
             catch (ValidationException e)
             {
+                NLog.LogError(this.GetType(), "Exception: " + e.Message);
+
                 ViewBag.Message = e.Message;
             }
 
@@ -45,6 +52,8 @@ namespace Payments.WEB.Controllers
 
         public ActionResult UnblockAccountRequest(string id)
         {
+            NLog.LogInfo(this.GetType(), "Method UnblockAccountRequest execution");
+
             try
             {
                 service.UnblockAccountRequest(id);
@@ -52,6 +61,8 @@ namespace Payments.WEB.Controllers
             }
             catch (ValidationException e)
             {
+                NLog.LogError(this.GetType(), "Exception: " + e.Message);
+
                 TempData["Message"] = e.Message;
             }
 
@@ -60,6 +71,8 @@ namespace Payments.WEB.Controllers
 
         public ActionResult BlockAccount(string id)
         {
+            NLog.LogInfo(this.GetType(), "Method BlockAccount execution");
+
             try
             {
                 service.BlockAccount(id);
@@ -67,6 +80,8 @@ namespace Payments.WEB.Controllers
             }
             catch (ValidationException e)
             {
+                NLog.LogError(this.GetType(), "Exception: " + e.Message);
+
                 TempData["Message"] = e.Message;
             }
 
@@ -76,6 +91,8 @@ namespace Payments.WEB.Controllers
         [HttpGet]
         public ActionResult CreateDebitAccount()
         {
+            NLog.LogInfo(this.GetType(), "Method CreateDebitAccount GET execution");
+
             return View();
         }
 
@@ -83,6 +100,8 @@ namespace Payments.WEB.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult CreateDebitAccount(DebitAccountViewModel debitAcc)
         {
+            NLog.LogInfo(this.GetType(), "Method CreateDebitAccount POST execution");
+
             if (ModelState.IsValid)
             {
                 var userId = User.Identity.GetUserId();
@@ -98,11 +117,15 @@ namespace Payments.WEB.Controllers
                 }
                 catch (ValidationException e)
                 {
+                    NLog.LogError(this.GetType(), "Exception: " + e.Message);
+
                     TempData["Message"] = e.Message;
                 }
 
                 return RedirectToAction("Index");
             }
+
+            NLog.LogDebug(this.GetType(), "Model not valid");
 
             return View();
         }
@@ -110,6 +133,8 @@ namespace Payments.WEB.Controllers
         [HttpGet]
         public ActionResult ChangeNameAccount(string id)
         {
+            NLog.LogInfo(this.GetType(), "Method ChangeNameAccount GET execution");
+
             try
             {
                 var accountDto = service.GetAccount(id);
@@ -120,6 +145,8 @@ namespace Payments.WEB.Controllers
             }
             catch (ValidationException e)
             {
+                NLog.LogError(this.GetType(), "Exception: " + e.Message);
+
                 TempData["Message"] = e.Message;
                 return RedirectToAction("Index");
             }
@@ -128,7 +155,9 @@ namespace Payments.WEB.Controllers
         [HttpPost]
         public ActionResult ChangeNameAccount(DebitAccountViewModel model)
         {
-            if(ModelState["Name"].Errors.Count == 0)
+            NLog.LogInfo(this.GetType(), "Method ChangeNameAccount POST execution");
+
+            if (ModelState["Name"].Errors.Count == 0)
             {
                 var modelDto = Mapper.Map<DebitAccountViewModel, DebitAccountDTO>(model);
                 try
@@ -138,6 +167,8 @@ namespace Payments.WEB.Controllers
                 }
                 catch (ValidationException e)
                 {
+                    NLog.LogError(this.GetType(), "Exception: " + e.Message);
+
                     TempData["Message"] = e.Message;
                 }
                 return RedirectToAction("Index");
@@ -149,6 +180,8 @@ namespace Payments.WEB.Controllers
         [HttpGet]
         public ActionResult Replenish(string id)
         {
+            NLog.LogInfo(this.GetType(), "Method Replenish GET execution");
+
             try
             {
                 var account = service.GetAccount(id);
@@ -165,6 +198,8 @@ namespace Payments.WEB.Controllers
             }
             catch (ValidationException e)
             {
+                NLog.LogError(this.GetType(), "Exception: " + e.Message);
+
                 TempData["Message"] = e.Message;
             }
             
@@ -175,6 +210,8 @@ namespace Payments.WEB.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Replenish(PaymentViewModel payment)
         {
+            NLog.LogInfo(this.GetType(), "Method Replenish POST execution");
+
             if (ModelState.IsValid)
             {
                 var paymentDto = Mapper.Map<PaymentViewModel, PaymentDTO>(payment);
@@ -185,6 +222,8 @@ namespace Payments.WEB.Controllers
                 }
                 catch (ValidationException e)
                 {
+                    NLog.LogError(this.GetType(), "Exception: " + e.Message);
+
                     TempData["Message"] = e.Message;
                 }
 
@@ -197,6 +236,8 @@ namespace Payments.WEB.Controllers
         [HttpGet]
         public ActionResult Withdraw(string id)
         {
+            NLog.LogInfo(this.GetType(), "Method Withdraw GET execution");
+
             try
             {
                 var account = service.GetAccount(id);
@@ -213,6 +254,8 @@ namespace Payments.WEB.Controllers
             }
             catch (ValidationException e)
             {
+                NLog.LogError(this.GetType(), "Exception: " + e.Message);
+
                 TempData["Message"] = e.Message;
             }
 
@@ -223,6 +266,8 @@ namespace Payments.WEB.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Withdraw(PaymentViewModel payment)
         {
+            NLog.LogInfo(this.GetType(), "Method Withdraw POST execution");
+
             if (ModelState.IsValid)
             {
                 var paymentDto = Mapper.Map<PaymentViewModel, PaymentDTO>(payment);
@@ -235,13 +280,16 @@ namespace Payments.WEB.Controllers
                 }
                 catch (ValidationException e)
                 {
+                    NLog.LogError(this.GetType(), "Exception: " + e.Message);
+
                     ModelState.AddModelError(e.Property, e.Message);
                     return View(payment);
                 }
                 catch (Exception e)
                 {
+                    NLog.LogError(this.GetType(), "Exception: " + e.Message);
+
                     TempData["Message"] = e.Message;
-                    
                 }
 
                 return RedirectToAction("Index");
@@ -254,6 +302,8 @@ namespace Payments.WEB.Controllers
         [HttpGet]
         public ActionResult Payment(string id)
         {
+            NLog.LogInfo(this.GetType(), "Method Payment GET execution");
+
             try
             {
                 var account = service.GetAccount(id);
@@ -274,6 +324,8 @@ namespace Payments.WEB.Controllers
                 }
             catch (ValidationException e)
             {
+                NLog.LogError(this.GetType(), "Exception: " + e.Message);
+
                 TempData["Message"] = e.Message;
             }
 
@@ -284,6 +336,8 @@ namespace Payments.WEB.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Payment(PaymentViewModel payment)
         {
+            NLog.LogInfo(this.GetType(), "Method Payment POST execution");
+
             if (ModelState.IsValid)
             {
 
@@ -295,6 +349,8 @@ namespace Payments.WEB.Controllers
                 }
                 catch (ValidationException e)
                 {
+                    NLog.LogError(this.GetType(), "Exception: " + e.Message);
+
                     ModelState.AddModelError(e.Property, e.Message);
                     return View(payment);
                 }

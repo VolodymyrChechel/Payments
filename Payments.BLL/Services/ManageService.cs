@@ -12,6 +12,7 @@ using Payments.BLL.Infrastructure;
 using Payments.BLL.Interfaces;
 using Payments.BLL.Util;
 using Payments.Common.Enums;
+using Payments.Common.NLog;
 using Payments.DAL.Entities;
 using Payments.DAL.Interfaces;
 
@@ -25,11 +26,16 @@ namespace Payments.BLL.Services
 
         public ManageService(IUnitOfWork uow)
         {
+            NLog.LogInfo(this.GetType(), "Constructor ManageService execution");
+
             Database = uow;
         }
 
         public IEnumerable<UserInfoDTO> GetProfiles()
         {
+            NLog.LogInfo(this.GetType(), "Method GetProfiles execution");
+
+
             var clients = Database.ClientManager.GetAll().
                 Include(profile => profile.ApplicationUser);
 
@@ -38,6 +44,8 @@ namespace Payments.BLL.Services
 
         public UserInfoDTO GetProfile(string id)
         {
+            NLog.LogInfo(this.GetType(), "Method GetProfile execution");
+
             var client = Database.ClientManager.Get(id);
 
             return Mapper.Map<ClientProfile, UserInfoDTO>(client);
@@ -45,6 +53,8 @@ namespace Payments.BLL.Services
 
         public void BlockUser(string id)
         {
+            NLog.LogInfo(this.GetType(), "Method BlockUser execution");
+
             var client = Database.ClientManager.Get(id);
             client.IsBlocked = true;
             Database.ClientManager.Update(client);
@@ -53,6 +63,8 @@ namespace Payments.BLL.Services
 
         public void UnblockUser(string id)
         {
+            NLog.LogInfo(this.GetType(), "Method UnblockUser execution");
+
             var client = Database.ClientManager.Get(id);
             client.IsBlocked = false;
             Database.ClientManager.Update(client);
@@ -65,6 +77,8 @@ namespace Payments.BLL.Services
             string profileId, bool withoutCard = false,
             string sortType = null)
         {
+            NLog.LogInfo(this.GetType(), "Method GetDebitAccountsByProfile execution");
+
             var accountsList = Database.DebitAccounts.
                 Find(debAcc => debAcc.ClientProfileId == profileId).
                 Include(debAcc => debAcc.Cards);
@@ -104,6 +118,8 @@ namespace Payments.BLL.Services
 
         public void CreateDebitAccount(DebitAccountDTO accountDto)
         {
+            NLog.LogInfo(this.GetType(), "Method CreateDebitAccount execution");
+
             var account = Mapper.Map<DebitAccountDTO, DebitAccount>(accountDto);
             var user = Database.ClientManager.Get(accountDto.ClientProfileId);
             
@@ -117,7 +133,9 @@ namespace Payments.BLL.Services
 
         public DebitAccountDTO GetDebitAccount(int? id)
         {
-            if(id == null)
+            NLog.LogInfo(this.GetType(), "Method GetDebitAccount execution");
+
+            if (id == null)
                 throw new ValidationException("Accounts id was not passed", "");
             
             var account = Database.DebitAccounts.Get(id.Value);
@@ -130,6 +148,8 @@ namespace Payments.BLL.Services
 
         public void UpdateDebitAccount(DebitAccountDTO debitAccountDto)
         {
+            NLog.LogInfo(this.GetType(), "Method UpdateDebitAccount execution");
+
             if (debitAccountDto == null)
                 throw new ValidationException("Account was not passed", "");
 
@@ -141,13 +161,17 @@ namespace Payments.BLL.Services
 
         public string GetAccountProfileId(int? id)
         {
+            NLog.LogInfo(this.GetType(), "Method GetAccountProfileId execution");
+
             var profileId = Database.Accounts.Get(id).ClientProfile.Id;
             return profileId;
         }
 
         public bool IsAccountExist(int? accountId)
         {
-            if(accountId == null)
+            NLog.LogInfo(this.GetType(), "Method IsAccountExist execution");
+
+            if (accountId == null)
                 throw new ValidationException("Accounts id was not passed", "");
 
             var account = Database.Accounts.Get(accountId.Value);
@@ -157,6 +181,8 @@ namespace Payments.BLL.Services
 
         public void DeleteAccount(int? accountId)
         {
+            NLog.LogInfo(this.GetType(), "Method DeleteAccount execution");
+
             if (accountId == null)
                 throw new ValidationException("Accounts id was not passed", "");
             
@@ -166,6 +192,8 @@ namespace Payments.BLL.Services
 
         public void CreateCard(CardDto card)
         {
+            NLog.LogInfo(this.GetType(), "Method CreateCard execution");
+
             Random random = new Random();
 
             // generate holder name
@@ -200,6 +228,8 @@ namespace Payments.BLL.Services
 
         public bool IsCardExist(string number)
         {
+            NLog.LogInfo(this.GetType(), "Method IsCardExist execution");
+
             var card = Database.Cards.Get(number);
 
             return card != null;
@@ -207,7 +237,9 @@ namespace Payments.BLL.Services
 
         public IEnumerable<CardDto> GetCardsByProfile(string id)
         {
-            if(id == null)
+            NLog.LogInfo(this.GetType(), "Method GetCardsByProfile execution");
+
+            if (id == null)
                 throw new ValidationException("Id was not passed", "");
 
             var accounts = Database.Accounts.
@@ -222,6 +254,8 @@ namespace Payments.BLL.Services
 
         public void DeleteCard(string number)
         {
+            NLog.LogInfo(this.GetType(), "Method DeleteCard execution");
+
             if (number == null)
                 throw new ValidationException("Number was not passed", "");
 
@@ -231,7 +265,9 @@ namespace Payments.BLL.Services
 
         public void Replenish(PaymentDTO paymentDto)
         {
-            if(paymentDto == null)
+            NLog.LogInfo(this.GetType(), "Method Replenish execution");
+
+            if (paymentDto == null)
                 throw new ValidationException("Payment object is not passed", "");
 
             var payment = Mapper.Map<PaymentDTO, Payment>(paymentDto);
@@ -251,6 +287,8 @@ namespace Payments.BLL.Services
 
         public void Withdraw(PaymentDTO paymentDto)
         {
+            NLog.LogInfo(this.GetType(), "Method Withdraw execution");
+
             if (paymentDto == null)
                 throw new ValidationException("Payment object is not passed", "");
 
@@ -278,6 +316,8 @@ namespace Payments.BLL.Services
         // create payment
         public void Payment(PaymentDTO paymentDto)
         {
+            NLog.LogInfo(this.GetType(), "Method Payment execution");
+
             if (paymentDto == null)
                 throw new ValidationException("Payment object is not passed", "");
             
@@ -303,6 +343,8 @@ namespace Payments.BLL.Services
 
         public IEnumerable<PaymentDTO> GetPaymentsByProfile(string id, string sortType)
         {
+            NLog.LogInfo(this.GetType(), "Method GetPaymentsByProfile execution");
+
             if (id == null)
                 throw new ValidationException("Cannot find user", "");
 
@@ -335,7 +377,9 @@ namespace Payments.BLL.Services
         // method to confirm payment
         public void ConfirmPayment(string id)
         {
-            if(id == null)
+            NLog.LogInfo(this.GetType(), "Method ConfirmPayment execution");
+
+            if (id == null)
                 throw new ValidationException("Id was not set, cannot find paymnet", "Id");
 
             var payment = Database.Payments.Get(id);

@@ -7,6 +7,7 @@ using Payments.BLL.DTO;
 using Payments.BLL.Infrastructure;
 using Payments.BLL.Interfaces;
 using Payments.Common.Enums;
+using Payments.Common.NLog;
 using Payments.DAL.Entities;
 using Payments.DAL.Interfaces;
 
@@ -20,11 +21,15 @@ namespace Payments.BLL.Services
 
         public PaymentsService(IUnitOfWork uow)
         {
+            NLog.LogInfo(this.GetType(), "Constructor PaymentsService execution");
+
             Database = uow;
         }
 
         public PaymentDTO GetPayment(int? id)
         {
+            NLog.LogInfo(this.GetType(), "Method GetPayment execution");
+
             if (id == null)
                 throw new ValidationException("Payment id was not passed", "");
 
@@ -40,6 +45,8 @@ namespace Payments.BLL.Services
         
         public IEnumerable<PaymentDTO> GetPayments(string id, string sortType)
         {
+            NLog.LogInfo(this.GetType(), "Method GetPayments execution");
+
             if (id == null)
                 throw new ValidationException("Cannot find user", "");
 
@@ -71,7 +78,9 @@ namespace Payments.BLL.Services
 
         public IEnumerable<DebitAccountDTO> GetDebitAccountsByProfile(string profileId)
         {
-            if(profileId == null)
+            NLog.LogInfo(this.GetType(), "Method GetDebitAccountsByProfile execution");
+
+            if (profileId == null)
                 throw new ValidationException("Profile id is not found", "");
 
             var profileStatus = Database.ClientManager.Get(profileId).IsBlocked;
@@ -94,6 +103,8 @@ namespace Payments.BLL.Services
 
         public void CreatePayment(PaymentDTO paymentDto)
         {
+            NLog.LogInfo(this.GetType(), "Method CreatePayment execution");
+
             if (paymentDto == null)
                 throw new ValidationException("Payment object is not passed", "");
 

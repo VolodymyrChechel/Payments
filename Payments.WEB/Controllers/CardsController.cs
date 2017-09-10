@@ -8,6 +8,7 @@ using Microsoft.AspNet.Identity;
 using Payments.BLL.DTO;
 using Payments.BLL.Infrastructure;
 using Payments.BLL.Interfaces;
+using Payments.Common.NLog;
 using Payments.WEB.Models;
 
 namespace Payments.WEB.Controllers
@@ -19,11 +20,15 @@ namespace Payments.WEB.Controllers
 
         public CardsController(ICardsService serv)
         {
+            NLog.LogDebug(this.GetType(), "CardsController constructor");
+
             service = serv;
         }
 
         public ActionResult Index()
         {
+            NLog.LogInfo(this.GetType(), "Method Index execution");
+
             string userId = User.Identity.GetUserId();
             try
             {
@@ -35,6 +40,8 @@ namespace Payments.WEB.Controllers
             }
             catch (ValidationException e)
             {
+                NLog.LogError(this.GetType(), "Exception: " + e.Message);
+
                 ViewBag.Message = e.Message;
             }
 
@@ -44,11 +51,13 @@ namespace Payments.WEB.Controllers
         [HttpGet]
         public ActionResult CreateCard()
         {
+            NLog.LogInfo(this.GetType(), "Method CreateCard execution");
+
             var userId = User.Identity.GetUserId();
 
             var accounts = service.GetDebitAccountsByProfile(userId, true);
 
-            if (accounts.Count() == 0)
+            if (accounts.Any())
             {
                 ViewBag.Message = "Profile has no available debit accounts. Create a new account before creating card";
 
@@ -74,6 +83,8 @@ namespace Payments.WEB.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult CreateCard(CardViewModel card)
         {
+            NLog.LogDebug(this.GetType(), "CreateCard method execution");
+
             if (ModelState.IsValid)
             {
                 var accountId = User.Identity.GetUserId();
@@ -86,6 +97,8 @@ namespace Payments.WEB.Controllers
                 }
                 catch (ValidationException e)
                 {
+                    NLog.LogError(this.GetType(), "Exception: " + e.Message);
+
                     TempData["Message"] = e.Message;
                 }
                 return RedirectToAction("Index");

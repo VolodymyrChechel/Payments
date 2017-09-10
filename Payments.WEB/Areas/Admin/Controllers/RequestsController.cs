@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using Payments.BLL.Infrastructure;
 using Payments.BLL.Interfaces;
+using Payments.Common.NLog;
 
 namespace Payments.WEB.Areas.Admin.Controllers
 {
@@ -15,12 +16,16 @@ namespace Payments.WEB.Areas.Admin.Controllers
 
         public RequestsController(IRequestsService serv)
         {
+            NLog.LogInfo(this.GetType(), "Constructor RequestsController execution");
+
             service = serv;
         }
 
         // show 
         public ActionResult List()
         {
+            NLog.LogInfo(this.GetType(), "Method List execution");
+
             var requestList = service.GetRequestsList();
 
             ViewBag.Message = TempData?["Message"];
@@ -29,6 +34,8 @@ namespace Payments.WEB.Areas.Admin.Controllers
 
         public ActionResult Accept(string id)
         {
+            NLog.LogInfo(this.GetType(), "Method Accept execution");
+
             try
             {
                 service.AcceptRequest(id);
@@ -36,6 +43,8 @@ namespace Payments.WEB.Areas.Admin.Controllers
             }
             catch (ValidationException e)
             {
+                NLog.LogError(this.GetType(), "Exception: " + e.Message);
+
                 TempData["Message"] = e.Message;
             }
 
@@ -44,6 +53,8 @@ namespace Payments.WEB.Areas.Admin.Controllers
 
         public ActionResult Reject(string id)
         {
+            NLog.LogInfo(this.GetType(), "Method Reject execution");
+
             try
             {
                 service.RejectRequest(id);
@@ -51,6 +62,8 @@ namespace Payments.WEB.Areas.Admin.Controllers
             }
             catch (ValidationException e)
             {
+                NLog.LogError(this.GetType(), "Exception: " + e.Message);
+
                 TempData["Message"] = e.Message;
             }
 

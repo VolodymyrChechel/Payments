@@ -26,11 +26,14 @@ namespace Payments.WEB.Controllers
 
         public PaymentsController(IPaymentsService serv)
         {
+            NLog.LogDebug(this.GetType(), "PaymentsController constructor");
+
             service = serv;
         }
 
         public ActionResult Index(string sort)
         {
+            NLog.LogInfo(this.GetType(), "In Index method");
             ViewBag.Message = TempData?["Message"];
 
             try
@@ -45,6 +48,7 @@ namespace Payments.WEB.Controllers
             }
             catch (ValidationException e)
             {
+                NLog.LogError(this.GetType(), "Exception: " + e.Message);
                 ViewBag.Message = e.Message;
             }
             
@@ -55,10 +59,13 @@ namespace Payments.WEB.Controllers
         [HttpGet]
         public ActionResult CreatePayment()
         {
+            NLog.LogInfo(this.GetType(), "Method CreatePayment execution");
             var id = User.Identity.GetUserId();
 
             try
             {
+                NLog.LogInfo(this.GetType(), "Try get accounts list");
+
                 var accounts = service.GetDebitAccountsByProfile(id);
 
                 var items = new List<SelectListItem>();
@@ -78,6 +85,7 @@ namespace Payments.WEB.Controllers
 
             catch (ValidationException e)
             {
+                NLog.LogError(this.GetType(), "Exception: " + e.Message);
                 TempData["Message"] = e.Message;
 
                 return RedirectToAction("Index");
@@ -88,6 +96,8 @@ namespace Payments.WEB.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult CreatePayment(PaymentViewModel payment)
         {
+            NLog.LogInfo(this.GetType(), "Method CreatePayment execution");
+
             if (ModelState.IsValid)
             {
                 var paymentDto = Mapper.Map<PaymentViewModel, PaymentDTO>(payment);
@@ -100,6 +110,8 @@ namespace Payments.WEB.Controllers
                 }
                 catch (ValidationException e)
                 {
+                    NLog.LogError(this.GetType(), "Exception: " + e.Message);
+
                     TempData["Message"] = e.Message;
                 }
 
@@ -111,10 +123,12 @@ namespace Payments.WEB.Controllers
 
         public ActionResult CreateCheque(int? id)
         {
-            NLog.LogInfo(this.GetType(), "CreateCheque method");
+            NLog.LogInfo(this.GetType(), "Method CreateCheque execution");
 
             try
             {
+                NLog.LogDebug(this.GetType(), "Try create memory steram");
+
                 var paymentDto = service.GetPayment(id);
                 var payment = Mapper.Map<PaymentDTO, PaymentViewModel>(paymentDto);
 
@@ -124,6 +138,8 @@ namespace Payments.WEB.Controllers
             }
             catch (Exception e)
             {
+                NLog.LogError(this.GetType(), "Exception: " + e.Message);
+
                 TempData["Message"] = e.Message;
                 return RedirectToAction("Index");
             }

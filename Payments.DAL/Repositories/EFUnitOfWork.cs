@@ -2,6 +2,7 @@
 using System.Data.Entity;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity.EntityFramework;
+using Payments.Common.NLog;
 using Payments.DAL.EF;
 using Payments.DAL.Entities;
 using Payments.DAL.Identity;
@@ -27,6 +28,8 @@ namespace Payments.DAL.Repositories
 
         public EFUnitOfWork(string connectionString)
         {
+            NLog.LogInfo(this.GetType(), "Constructor EFUnitOfWork execution");
+
             db = new PaymentsContext(connectionString);
         }
 

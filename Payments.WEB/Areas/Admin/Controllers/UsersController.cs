@@ -12,6 +12,7 @@ using Payments.BLL.DTO;
 using Payments.BLL.Infrastructure;
 using Payments.BLL.Interfaces;
 using Payments.Common.Enums;
+using Payments.Common.NLog;
 using Payments.WEB.Areas.Admin.Models;
 using Payments.WEB.Util;
 
@@ -25,11 +26,15 @@ namespace Payments.WEB.Areas.Admin.Controllers
 
         public UsersController(IManageService serv)
         {
+            NLog.LogInfo(this.GetType(), "Constructor UsersController execution");
+
             service = serv;
         }
 
         public ActionResult List()
         {
+            NLog.LogInfo(this.GetType(), "Method List execution");
+
             ViewBag.Message = TempData["Message"]?.ToString();
 
             var list = service.GetProfiles();
@@ -39,6 +44,8 @@ namespace Payments.WEB.Areas.Admin.Controllers
 
         public ActionResult Show(string id)
         {
+            NLog.LogInfo(this.GetType(), "Method Show execution");
+
             TempData["UserId"] = id;
 
             if (id == null)
@@ -61,6 +68,8 @@ namespace Payments.WEB.Areas.Admin.Controllers
         //[ChildActionOnly]
         public ActionResult Accounts(string id)
         {
+            NLog.LogInfo(this.GetType(), "Method Accounts execution");
+
             if (id != null)
             {
                 string sortType = this.Request.QueryString["Order"];
@@ -77,6 +86,8 @@ namespace Payments.WEB.Areas.Admin.Controllers
         [HttpGet]
         public ActionResult CreateDebitAccount(string id)
         {
+            NLog.LogInfo(this.GetType(), "Method CreateDebitAccount GET execution");
+
             if (id == null)
                 return RedirectToAction("List");
 
@@ -90,6 +101,8 @@ namespace Payments.WEB.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult CreateDebitAccount(DebitAccountViewModel debitAcc)
         {
+            NLog.LogInfo(this.GetType(), "Method CreateDebitAccount POST execution");
+
             if (ModelState.IsValid)
             {
                 var debitAccDto = Mapper.Map<DebitAccountViewModel, DebitAccountDTO>(debitAcc);
@@ -104,15 +117,19 @@ namespace Payments.WEB.Areas.Admin.Controllers
 
         public ActionResult BlockUser(string id)
         {
+            NLog.LogInfo(this.GetType(), "Method BlockUser execution");
+
             try
             {
                 service.BlockUser(id);
 
                 TempData["Message"] = "User " + id + " was successfully blocked";
             }
-            catch
+            catch (ValidationException e)
             {
-                TempData["Message"] = "There was a proflem with blocking a user";
+                NLog.LogError(this.GetType(), "Exception: " + e.Message);
+
+                TempData["Message"] = e.Message;
             }
 
             return RedirectToAction("Show", new {id = id});
@@ -120,15 +137,19 @@ namespace Payments.WEB.Areas.Admin.Controllers
 
         public ActionResult UnblockUser(string id)
         {
+            NLog.LogInfo(this.GetType(), "Method UnblockUser execution");
+
             try
             {
                 service.UnblockUser(id);
 
                 TempData["Message"] = "User " + id + " was successfully unblocked";
             }
-            catch
+            catch (ValidationException e)
             {
-                TempData["Message"] = "There was a proflem with unblocking a user";
+                NLog.LogError(this.GetType(), "Exception: " + e.Message);
+
+                TempData["Message"] = e.Message;
             }
 
             return RedirectToAction("Show", new { id = id });
@@ -139,9 +160,11 @@ namespace Payments.WEB.Areas.Admin.Controllers
         [HttpGet]
         public ActionResult CreateDebitCard(string id)
         {
+            NLog.LogInfo(this.GetType(), "Method CreateDebitCard GET execution");
+
             var accounts = service.GetDebitAccountsByProfile(id, true);
 
-            if (accounts.Count() == 0)
+            if (accounts.Any())
             {
                 TempData["Message"] = "Profile has no available debit accounts. Create a new account before creating card";
 
@@ -163,6 +186,8 @@ namespace Payments.WEB.Areas.Admin.Controllers
         [HttpGet]
         public ActionResult CardsList(string id)
         {
+            NLog.LogInfo(this.GetType(), "Method CardsList GET execution");
+
             try
             {
                 var accounts = service.GetCardsByProfile(id);
@@ -170,6 +195,8 @@ namespace Payments.WEB.Areas.Admin.Controllers
             }
             catch (ValidationException e)
             {
+                NLog.LogError(this.GetType(), "Exception: " + e.Message);
+
                 TempData["Message"] = e.Message;
             }
 
@@ -184,6 +211,8 @@ namespace Payments.WEB.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult CreateDebitCard(CardViewModel card)
         {
+            NLog.LogInfo(this.GetType(), "Method CreateDebitCard POST execution");
+
             if (ModelState.IsValid)
             {
                 var depositCardDto = Mapper.Map<CardViewModel, CardDto>(card);
@@ -203,6 +232,8 @@ namespace Payments.WEB.Areas.Admin.Controllers
         [HttpGet]
         public ActionResult EditDebitAccount(int? id)
         {
+            NLog.LogInfo(this.GetType(), "Method EditDebitAccount GET execution");
+
             try
             {
                 var debitAcc = service.GetDebitAccount(id);
@@ -212,6 +243,8 @@ namespace Payments.WEB.Areas.Admin.Controllers
             }
             catch (ValidationException e)
             {
+                NLog.LogError(this.GetType(), "Exception: " + e.Message);
+
                 TempData["Message"] = e.Message;
             }
             if (TempData["UserId"] != null)
@@ -225,6 +258,8 @@ namespace Payments.WEB.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult EditDebitAccount(DebitAccountViewModel debitAcc)
         {
+            NLog.LogInfo(this.GetType(), "Method EditDebitAccount POST execution");
+
             if (ModelState.IsValid)
             {
                 var debitAccDto = Mapper.Map<DebitAccountViewModel, DebitAccountDTO>(debitAcc);
@@ -239,6 +274,8 @@ namespace Payments.WEB.Areas.Admin.Controllers
         [HttpGet]
         public ActionResult DeleteAccount(int? id)
         {
+            NLog.LogInfo(this.GetType(), "Method DeleteAccount GET execution");
+
             if (id == null)
             {
                 ViewBag.Message = "Account's number was not passed";
@@ -258,6 +295,8 @@ namespace Payments.WEB.Areas.Admin.Controllers
         [HttpGet]
         public ActionResult DeleteCard(string id)
         {
+            NLog.LogInfo(this.GetType(), "Method DeleteCard GET execution");
+
             if (id == null)
             {
                 ViewBag.Message = "Card's name was not passed";
@@ -278,14 +317,19 @@ namespace Payments.WEB.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteAccountConfirmed(int? id)
         {
+            NLog.LogInfo(this.GetType(), "Method DeleteAccountConfirmed POST execution");
+
             try
             {
                 service.DeleteAccount(id.Value);
                 TempData["Message"] = "Account " + id + " was successfully deleted";
             }
-            catch
+            catch (Exception e)
             {
-                TempData["Message"] = "Account " + id + " has binded cards / operations / delete requests and shouldn't be deleted";
+                NLog.LogError(this.GetType(), "Exception: " + e.Message);
+
+                TempData["Message"] = "Account " + id +
+                    " has binded cards / operations / delete requests and shouldn't be deleted";
             }
 
             if (TempData["UserId"] != null)
@@ -298,8 +342,19 @@ namespace Payments.WEB.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteCardConfirmed(string id)
         {
-            service.DeleteCard(id);
-            TempData["Message"] = "Card " + id + " was successfully deleted";
+            NLog.LogInfo(this.GetType(), "Method DeleteAccountConfirmed POST execution");
+
+            try
+            {
+                service.DeleteCard(id);
+                TempData["Message"] = "Card " + id + " was successfully deleted";
+            }
+            catch (ValidationException e)
+            {
+                NLog.LogError(this.GetType(), "Exception: " + e.Message);
+
+                TempData["Message"] = e.Message;
+            }
 
             if (TempData["UserId"] != null)
                 return RedirectToAction("Show", new {id = TempData["UserId"]});
@@ -310,6 +365,8 @@ namespace Payments.WEB.Areas.Admin.Controllers
         [HttpGet]
         public ActionResult Replenish(int? id)
         {
+            NLog.LogInfo(this.GetType(), "Method Replenish GET execution");
+
             try
             {
                 var account = service.GetDebitAccount(id);
@@ -322,6 +379,8 @@ namespace Payments.WEB.Areas.Admin.Controllers
             }
             catch (ValidationException e)
             {
+                NLog.LogError(this.GetType(), "Exception: " + e.Message);
+
                 TempData["Message"] = e.Message;
             }
 
@@ -335,6 +394,8 @@ namespace Payments.WEB.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Replenish(PaymentViewModel payment)
         {
+            NLog.LogInfo(this.GetType(), "Method Replenish POST execution");
+
             if (ModelState.IsValid)
             {
                 var paymentDto = Mapper.Map<PaymentViewModel, PaymentDTO>(payment);
@@ -353,6 +414,8 @@ namespace Payments.WEB.Areas.Admin.Controllers
         [HttpGet]
         public ActionResult Withdraw(int? id)
         {
+            NLog.LogInfo(this.GetType(), "Method Withdraw GET execution");
+
             try
             {
                 var account = service.GetDebitAccount(id);
@@ -365,6 +428,8 @@ namespace Payments.WEB.Areas.Admin.Controllers
             }
             catch (ValidationException e)
             {
+                NLog.LogError(this.GetType(), "Exception: " + e.Message);
+
                 TempData["Message"] = e.Message;
             }
 
@@ -378,6 +443,8 @@ namespace Payments.WEB.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Withdraw(PaymentViewModel payment)
         {
+            NLog.LogInfo(this.GetType(), "Method Withdraw POST execution");
+
             if (ModelState.IsValid)
             {
                 var paymentDto = Mapper.Map<PaymentViewModel, PaymentDTO>(payment);
@@ -386,7 +453,8 @@ namespace Payments.WEB.Areas.Admin.Controllers
                 {
                     service.Withdraw(paymentDto);
 
-                    TempData["Message"] = "Withdrawal from an account " + payment.Recipient + " was successfully";
+                    TempData["Message"] = "Withdrawal from an account " +
+                        payment.Recipient + " was successfully";
 
                     if (TempData["UserId"] != null)
                         return RedirectToAction("Show", new { id = TempData["UserId"] });
@@ -395,6 +463,8 @@ namespace Payments.WEB.Areas.Admin.Controllers
                 }
                 catch (ValidationException e)
                 {
+                    NLog.LogError(this.GetType(), "Exception: " + e.Message);
+
                     ModelState.AddModelError(e.Property, e.Message);
                 }
             }
@@ -406,6 +476,8 @@ namespace Payments.WEB.Areas.Admin.Controllers
         [HttpGet]
         public ActionResult Payment(int id)
         {
+            NLog.LogInfo(this.GetType(), "Method Payment GET execution");
+
             var account = service.GetDebitAccount(id);
 
             if (account == null)
@@ -430,7 +502,9 @@ namespace Payments.WEB.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Payment(PaymentViewModel payment)
         {
-            if(ModelState.IsValid)
+            NLog.LogInfo(this.GetType(), "Method Payment POST execution");
+
+            if (ModelState.IsValid)
             {
                 var paymentDto = Mapper.Map<PaymentViewModel, PaymentDTO>(payment);
                 try
@@ -458,6 +532,8 @@ namespace Payments.WEB.Areas.Admin.Controllers
         [HttpGet]
         public ActionResult CreatePayment(string id)
         {
+            NLog.LogInfo(this.GetType(), "Method CreatePayment GET execution");
+
             var accounts = service.GetDebitAccountsByProfile(id);
 
             if (accounts == null)
@@ -484,8 +560,10 @@ namespace Payments.WEB.Areas.Admin.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult CreatePayment(PaymentViewModel payment)
-
         {
+            NLog.LogInfo(this.GetType(), "Method CreatePayment GET execution");
+
+            // awful  bypass model state
             ModelState.Remove("Id");
 
             if (ModelState.IsValid)
@@ -504,6 +582,8 @@ namespace Payments.WEB.Areas.Admin.Controllers
                 }
                 catch (ValidationException e)
                 {
+                    NLog.LogError(this.GetType(), "Exception: " + e.Message);
+
                     ModelState.AddModelError(e.Property, e.Message);
                 }
             }
@@ -527,6 +607,8 @@ namespace Payments.WEB.Areas.Admin.Controllers
 
         public ActionResult PaymentsList(string id)
         {
+            NLog.LogInfo(this.GetType(), "Method PaymentsList execution");
+
             try
             {
                 string sortType = this.Request.QueryString["Order"];
@@ -539,6 +621,8 @@ namespace Payments.WEB.Areas.Admin.Controllers
             }
             catch (ValidationException e)
             {
+                NLog.LogError(this.GetType(), "Exception: " + e.Message);
+
                 TempData["Message"] = e.Message;
             }
 
@@ -550,6 +634,8 @@ namespace Payments.WEB.Areas.Admin.Controllers
 
         public ActionResult ConfirmPayment(string id)
         {
+            NLog.LogInfo(this.GetType(), "Method ConfirmPayment execution");
+
             try
             {
                 service.ConfirmPayment(id);
@@ -557,6 +643,8 @@ namespace Payments.WEB.Areas.Admin.Controllers
             }
             catch (ValidationException e)
             {
+                NLog.LogError(this.GetType(), "Exception: " + e.Message);
+
                 TempData["Message"] = e.Message;
             }
 

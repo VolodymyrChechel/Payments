@@ -1,4 +1,5 @@
 ﻿using System;
+using Payments.Common.NLog;
 
 namespace Payments.BLL.Infrastructure
 {
@@ -11,6 +12,8 @@ namespace Payments.BLL.Infrastructure
         public ValidationException(string message, string property) :
             base(message)
         {
+            NLog.LogInfo(this.GetType(), "Constructor ValidationException execution");
+
             Property = property;
         }
     }
