@@ -1,0 +1,90 @@
+﻿@using Payments.BLL.DTO
+@model UserInfoDTO
+
+@{
+    ViewBag.Title = "Show";
+}
+
+<h2>Information about user</h2>
+<p class="text-danger"> @ViewBag.Message </p>
+
+<h4 class="text-info"> @Model.FirstName @Model.SecondName | @Model.Email | @Model.VAT | 
+    @if (Model.IsBlocked)
+    {
+        @:Blocked client
+        @Html.ActionLink("Unblock client", "UnblockUser", new { id = Model.Id}, new { @class = "btn btn-danger btn-sm" })
+    }
+    else
+    {
+        @:Unblocked client
+        @Html.ActionLink("Block client", "BlockUser", new { id = Model.Id }, new { @class = "btn btn-danger btn-sm" })
+    }
+</h4>
+
+<div class="well">
+    <h4 class="col-md-7">List of debit accounts</h4>
+    
+    <div class="form-group col-md-5">
+        <label for="paymentsOrderChange" class=" col-md-3 control-label"> Select ordering </label>
+        <div class="col-md-9">
+            <select class="form-control" id="accountsOrderChange">
+                <option value="NUM_ASC">Sort ascending by number</option>
+                <option value="NUM_DESC">Sort descending by number</option>
+                <option value="NAME_ASC">Sort ascending by name</option>
+                <option value="NAME_DESC">Sort descending by name</option>
+                <option value="SUM_DESC">Sort descending by sum</option>
+                <option value="SUM_ASC">Sort ascending by sum</option>
+            </select>
+        </div>
+    </div>
+
+    <div id="accountsList">
+        @Html.Action("Accounts", new { id = @Model.Id })
+    </div>
+    
+    @Html.ActionLink("Create new debit account", "CreateDebitAccount", new { id = Model.Id })
+</div>
+
+<div class="well">
+    <h4>List of cards</h4>
+    @Html.Action("CardsList", new { id = Model.Id })
+    @Html.ActionLink("Create new debit card", "CreateDebitCard", new { id = Model.Id })
+</div>
+
+<div class="well">
+    <h4 class="col-md-7">List of payments</h4>
+
+    <div class="form-group col-md-5">
+        <label for="paymentsOrderChange" class=" col-md-3 control-label"> Select ordering </label>
+        <div class="col-md-9">
+            <select class="form-control" id="paymentsOrderChange">
+                <option value="NUM_ASC">Sort ascending by number</option>
+                <option value="NUM_DESC">Sort descending by number</option>
+                <option value="DATE_ASC">Sort ascending by date</option>
+                <option value="DATE_DESC">Sort descending by date</option>
+            </select>
+        </div>
+    </div>
+
+    <div id="paymentsList">
+        @Html.Action("PaymentsList", new { id = Model.Id })
+    </div>
+    @Html.ActionLink("Create a payment", "CreatePayment", new { id = Model.Id })
+</div>
+
+<script>
+    document.getElementById("paymentsOrderChange").addEventListener("change", changeOrderPayment);
+    document.getElementById("accountsOrderChange").addEventListener("change", changeOrderAccount);
+
+    function changeOrderPayment() {
+        var e = document.getElementById("paymentsOrderChange");
+        var option = e.options[e.selectedIndex].value;
+        $('#paymentsList').load('@Url.Action("PaymentsList", "Users")/@Model.Id?Order=' + option);
+    }
+
+    function changeOrderAccount() {
+        var e = document.getElementById("accountsOrderChange");
+        var option = e.options[e.selectedIndex].value;
+        $('#accountsList').load('@Url.Action("Accounts", "Users")/@Model.Id?Order=' + option);
+    }
+</script>

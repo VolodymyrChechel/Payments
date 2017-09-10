@@ -11,6 +11,10 @@
     {
         Response.Redirect(@Url.Action("List", "Users", new {Area = "Admin"}), false);
     }
+    if (User.IsInRole("employee"))
+    {
+        Response.Redirect(@Url.Action("List", "Users", new { Area = "Employee"}), false);
+    }
 
     <h2> Select operation </h2>
 

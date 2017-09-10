@@ -185,7 +185,14 @@ namespace Payments.WEB.Controllers
                 Email = "admin@admin.com",
                 Password = "ad46D_ewr3",
                 Role = "admin"
-            }, userList, new List<string> {"admin", "employee", "user"}); 
+            },
+            new UserDTO
+            {
+                Email = "employee@employee.com",
+                Password = "ad46D_ewr3",
+                Role = "employee"
+            },
+            userList, new List<string> {"admin", "employee", "user"}); 
         }
     }
 }

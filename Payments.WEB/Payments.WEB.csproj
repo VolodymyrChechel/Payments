@@ -259,6 +259,22 @@
     <Content Include="Areas\Admin\Views\Users\PaymentsList.cshtml" />
     <Content Include="Areas\Admin\Views\Users\Payment.cshtml" />
     <Content Include="Areas\Admin\Views\Users\CreatePayment.cshtml" />
+    <Content Include="Areas\Employee\Views\web.config" />
+    <Content Include="Areas\Employee\Views\Requests\List.cshtml" />
+    <Content Include="Areas\Employee\Views\Shared\_Layout.cshtml" />
+    <Content Include="Areas\Employee\Views\Users\Accounts.cshtml" />
+    <Content Include="Areas\Employee\Views\Users\CardsList.cshtml" />
+    <Content Include="Areas\Employee\Views\Users\CreateDebitAccount.cshtml" />
+    <Content Include="Areas\Employee\Views\Users\CreateDebitCard.cshtml" />
+    <Content Include="Areas\Employee\Views\Users\CreatePayment.cshtml" />
+    <Content Include="Areas\Employee\Views\Users\EditDebitAccount.cshtml" />
+    <Content Include="Areas\Employee\Views\Users\List.cshtml" />
+    <Content Include="Areas\Employee\Views\Users\Payment.cshtml" />
+    <Content Include="Areas\Employee\Views\Users\PaymentsList.cshtml" />
+    <Content Include="Areas\Employee\Views\Users\Replenish.cshtml" />
+    <Content Include="Areas\Employee\Views\Users\Show.cshtml" />
+    <Content Include="Areas\Employee\Views\Users\Withdraw.cshtml" />
+    <Content Include="Areas\Employee\Views\_ViewStart.cshtml" />
     <None Include="Scripts\jquery-3.1.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.1.1.js" />
     <Content Include="Scripts\jquery-3.1.1.min.js" />
@@ -292,6 +308,9 @@
     <Compile Include="Areas\Admin\Models\DebitAccountViewModel.cs" />
     <Compile Include="Areas\Admin\Models\CardViewModel.cs" />
     <Compile Include="Areas\Admin\Models\PaymentViewModel.cs" />
+    <Compile Include="Areas\Employee\Controllers\RequestsController.cs" />
+    <Compile Include="Areas\Employee\Controllers\UsersController.cs" />
+    <Compile Include="Areas\Employee\EmployeeAreaRegistration.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AccountsController.cs" />
     <Compile Include="Controllers\CardsController.cs" />
@@ -344,6 +363,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Areas\Employee\Models\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Payments.BLL\Payments.BLL.csproj">

@@ -1,0 +1,46 @@
+﻿@model Payments.WEB.Areas.Admin.Models.PaymentViewModel
+
+@{
+    ViewBag.Title = "Payment";
+}
+
+<h2>Creating a new payment with "@Model.AccountAccountNumber" account </h2>
+
+
+@using (Html.BeginForm("Payment", "Users", null, FormMethod.Post, new { @class = "form-horizontal" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="text-danger">
+        @Html.ValidationSummary(false)
+    </div>
+
+    @Html.HiddenFor(model => model.AccountAccountNumber)
+    @Html.HiddenFor(model => model.Id)
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.AccountAccountNumber, new { @class = "col-md-2 control-label" })
+        <div class="col-md-6 form-control-static"> @Html.DisplayFor(model => model.AccountAccountNumber) </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.PaymentSum, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10"> @Html.EditorFor(model => model.PaymentSum, new { htmlAttributes = new {@class = "form-control" }}) </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Recipient, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10"> @Html.TextBoxFor(model => model.Recipient, new { @class = "form-control" }) </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Comment, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10"> @Html.TextBoxFor(model => model.Comment, new { @class = "form-control" }) </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" class="btn btn-success">
+        </div>
+    </div>
+}

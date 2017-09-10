@@ -1,0 +1,52 @@
+﻿@model IEnumerable<Payments.WEB.Areas.Admin.Models.DebitAccountViewModel>
+@{
+    Layout = null;
+}
+
+@if (Model.Count() != 0)
+{
+    <div class="clearfix">
+        <table class="table">
+            <thead>
+            <tr>
+                <th class="col-md-1">Account number</th>
+                <th>Name</th>
+                <th>Sum on account</th>
+                <th>Currency</th>
+                <th>Status</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var account in Model)
+            {
+                <tr>
+                    <td> @account.AccountNumber </td>
+                    <td> @account.Name </td>
+                    <td> @account.Sum </td>
+                    <td> @account.Currency </td>
+                    <td>
+                        @if (account.IsBlocked)
+                        {
+                            @:Blocked
+                        }
+                        else
+                        {
+                            @:Unblocked
+                        }
+                    </td>
+                    <td>
+                        @Html.ActionLink("Replenish", "Replenish", new {id = account.AccountNumber}) |
+                        @Html.ActionLink("Withdraw", "Withdraw", new {id = account.AccountNumber}) |
+                        @Html.ActionLink("Payment", "Payment", new {id = account.AccountNumber})
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <p class="text-danger"> This user has no account yet. Create a new just now </p>
+}

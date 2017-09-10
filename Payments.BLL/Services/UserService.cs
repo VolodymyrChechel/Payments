@@ -86,7 +86,7 @@ namespace Payments.BLL.Services
         }
 
         // initialization data
-        public async Task SetInitialData(UserDTO adminDto, List<UserDTO> usersDto, List<string> roles)
+        public async Task SetInitialData(UserDTO adminDto, UserDTO employeeDto, List<UserDTO> usersDto, List<string> roles)
         {
             NLog.LogInfo(this.GetType(), "Method SetInitialData execution");
             
@@ -103,7 +103,10 @@ namespace Payments.BLL.Services
 
             // adding admin
             await Create(adminDto);
-           
+
+            // adding employee
+            await Create(employeeDto);
+            
             foreach (var userDto in usersDto)
             {
                 await Create(userDto);

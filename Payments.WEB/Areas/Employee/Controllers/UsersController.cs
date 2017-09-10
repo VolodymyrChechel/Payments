@@ -16,9 +16,9 @@ using Payments.Common.NLog;
 using Payments.WEB.Areas.Admin.Models;
 using Payments.WEB.Util;
 
-namespace Payments.WEB.Areas.Admin.Controllers
+namespace Payments.WEB.Areas.Employee.Controllers
 {
-    [Authorize(Roles="admin")]
+    [Authorize(Roles="employee, admin")]
     // admin controller to manage users
     public class UsersController : Controller
     {
@@ -65,7 +65,6 @@ namespace Payments.WEB.Areas.Admin.Controllers
             return View(user);
         }
 
-        //[ChildActionOnly]
         public ActionResult Accounts(string id)
         {
             NLog.LogInfo(this.GetType(), "Method Accounts execution");
@@ -164,7 +163,7 @@ namespace Payments.WEB.Areas.Admin.Controllers
 
             var accounts = service.GetDebitAccountsByProfile(id, true);
 
-            if (!accounts.Any())
+            if (accounts.Any())
             {
                 TempData["Message"] = "Profile has no available debit accounts. Create a new account before creating card";
 
@@ -252,114 +251,6 @@ namespace Payments.WEB.Areas.Admin.Controllers
 
             return RedirectToAction("List");
 
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult EditDebitAccount(DebitAccountViewModel debitAcc)
-        {
-            NLog.LogInfo(this.GetType(), "Method EditDebitAccount POST execution");
-
-            if (ModelState.IsValid)
-            {
-                var debitAccDto = Mapper.Map<DebitAccountViewModel, DebitAccountDTO>(debitAcc);
-                service.UpdateDebitAccount(debitAccDto);
-
-                return RedirectToAction("Show", new { id = debitAcc.ClientProfileId });
-            }
-
-            return View();
-        }
-        
-        [HttpGet]
-        public ActionResult DeleteAccount(int? id)
-        {
-            NLog.LogInfo(this.GetType(), "Method DeleteAccount GET execution");
-
-            if (id == null)
-            {
-                ViewBag.Message = "Account's number was not passed";
-                return RedirectToAction("List");
-            }
-
-            if (service.IsAccountExist(id.Value))
-            {
-                ViewBag.AccountId = id;
-                return View();
-            }
-
-            ViewBag.Message = "This account is not exist";
-            return RedirectToAction("List");
-        }
-
-        [HttpGet]
-        public ActionResult DeleteCard(string id)
-        {
-            NLog.LogInfo(this.GetType(), "Method DeleteCard GET execution");
-
-            if (id == null)
-            {
-                ViewBag.Message = "Card's name was not passed";
-                return View("List");
-            }
-
-            if (service.IsCardExist(id))
-            {
-                ViewBag.AccountId = id;
-                return View();
-            }
-
-            ViewBag.Message = "This card is not exist";
-            return View("List");
-        }
-
-        [HttpPost, ActionName("DeleteAccount")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteAccountConfirmed(int? id)
-        {
-            NLog.LogInfo(this.GetType(), "Method DeleteAccountConfirmed POST execution");
-
-            try
-            {
-                service.DeleteAccount(id.Value);
-                TempData["Message"] = "Account " + id + " was successfully deleted";
-            }
-            catch (Exception e)
-            {
-                NLog.LogError(this.GetType(), "Exception: " + e.Message);
-
-                TempData["Message"] = "Account " + id +
-                    " has binded cards / operations / delete requests and shouldn't be deleted";
-            }
-
-            if (TempData["UserId"] != null)
-                return RedirectToAction("Show", new { id = TempData["UserId"] });
-
-            return RedirectToAction("List");
-        }
-
-        [HttpPost, ActionName("DeleteCard")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteCardConfirmed(string id)
-        {
-            NLog.LogInfo(this.GetType(), "Method DeleteAccountConfirmed POST execution");
-
-            try
-            {
-                service.DeleteCard(id);
-                TempData["Message"] = "Card " + id + " was successfully deleted";
-            }
-            catch (ValidationException e)
-            {
-                NLog.LogError(this.GetType(), "Exception: " + e.Message);
-
-                TempData["Message"] = e.Message;
-            }
-
-            if (TempData["UserId"] != null)
-                return RedirectToAction("Show", new {id = TempData["UserId"]});
-
-            return RedirectToAction("List");
         }
 
         [HttpGet]

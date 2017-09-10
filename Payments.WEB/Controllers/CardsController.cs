@@ -54,12 +54,13 @@ namespace Payments.WEB.Controllers
             NLog.LogInfo(this.GetType(), "Method CreateCard execution");
 
             var userId = User.Identity.GetUserId();
+            
 
             var accounts = service.GetDebitAccountsByProfile(userId, true);
 
-            if (accounts.Any())
+            if (!accounts.Any())
             {
-                ViewBag.Message = "Profile has no available debit accounts. Create a new account before creating card";
+                TempData["Message"] = "Profile has no available debit accounts. Create a new account before creating card";
 
                 return RedirectToAction("Index");
             }

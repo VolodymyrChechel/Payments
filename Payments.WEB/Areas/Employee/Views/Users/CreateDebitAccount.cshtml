@@ -1,0 +1,45 @@
+﻿@using Payments.Common.Enums
+@model Payments.WEB.Areas.Admin.Models.DebitAccountViewModel
+
+@{
+    ViewBag.Title = "Create a new debit account";
+}
+
+<h2>Create a new debit acccount</h2>
+
+@using (Html.BeginForm("CreateDebitAccount", "Users", null, FormMethod.Post, new { @class = "form-horizontal" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(model => model.ClientProfileId);
+
+    <div class="text-danger">
+        @Html.ValidationSummary(false)
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Name, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10"> @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } }) </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Sum, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10"> @Html.EditorFor(model => model.Sum, new { htmlAttributes = new { @class = "form-control" } }) </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            @Html.EditorFor(model => model.IsBlocked) @Html.LabelFor(model => model.IsBlocked, new {@class = "control-label"})
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Currency, new { @class = "col-md-2 control-label" })
+        <div class="col-md-6"> @Html.EnumDropDownListFor(model => model.Currency, new { @class = "form-control"  }) </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" class="btn btn-success">
+        </div>
+    </div>
+}
